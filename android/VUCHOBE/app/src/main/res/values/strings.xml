@@ -1,0 +1,12 @@
+<resources>
+    <string name="app_name">VUCHOBE</string>
+    <!-- main activity -->
+    <string name="title_window">VUCHOBE</string>
+    <string name="button_login">ВОЙТИ</string>
+    <string name="button_reg">РЕГИСТРАЦИЯ</string>
+    <string name="description_password_image">Введите пароль</string>
+    <string name="description_login_image">Введите логин</string>
+    <string name="description_login_input">ВВЕДИТЕ ПОЧТУ</string>
+    <string name="description_password_input">ВВЕДИТЕ ПАРОЛЬ</string>
+    <string name="button_forgot">ЗАБЫЛИ ПАРОЛЬ</string>
+</resources>
