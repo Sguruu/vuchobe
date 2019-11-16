@@ -9,4 +9,5 @@
     <string name="description_login_input">ВВЕДИТЕ ПОЧТУ</string>
     <string name="description_password_input">ВВЕДИТЕ ПАРОЛЬ</string>
     <string name="button_forgot">ЗАБЫЛИ ПАРОЛЬ</string>
+    <string name="wait">ПОДОЖДИТЕ</string>
 </resources>

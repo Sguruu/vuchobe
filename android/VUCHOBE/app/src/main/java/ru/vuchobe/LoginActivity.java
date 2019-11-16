@@ -6,8 +6,12 @@ import android.text.InputType;
 import android.view.MotionEvent;
 import android.widget.Button;
 import android.widget.EditText;
+import android.widget.LinearLayout;
 import android.widget.Toast;
 
+import java.util.ArrayList;
+
+import androidx.annotation.NonNull;
 import androidx.annotation.Nullable;
 import ru.vuchobe.service.AuthService;
 import ru.vuchobe.util.threadUtil.ThreadAppCompatActivity;
@@ -18,6 +22,8 @@ import ru.vuchobe.util.ui.OnClickDrawableTextView;
  * A login screen that offers login via email/password.
  */
 public class LoginActivity extends ThreadAppCompatActivity {
+
+    private LinearLayout main;
 
     private EditText loginEditText;
     private EditText passwordEditText;
@@ -58,6 +64,8 @@ public class LoginActivity extends ThreadAppCompatActivity {
     }
 
     private void initUI() {
+        main = findViewById(R.id.mainId);
+
         loginEditText = findViewById(R.id.loginEditTextId);
         passwordEditText = findViewById(R.id.passwordEditTextId);
 
@@ -72,8 +80,10 @@ public class LoginActivity extends ThreadAppCompatActivity {
     }
 
     private boolean logon(String login, String password) {
+        lockButton(logonButton);
         ThreadTask threadTask = this.asyncIO(() ->
                 AuthService.logon(login, password, (body, exception) -> {
+                    unlockButton();
                     if (exception != null) {
                         if (exception.getLoginMessages().length != 0) {
                             loginEditText.setError(exception.getLoginMessages()[0]);
@@ -106,5 +116,37 @@ public class LoginActivity extends ThreadAppCompatActivity {
 
     private void forgotPassword() {
 
+    }
+
+    private ArrayList<Button> blockButton = new ArrayList();
+
+    private synchronized void lockButton(@NonNull Button button) {
+        if (button == null) return;
+        button.setTag(button.getText().toString());
+        button.setText(this.getResources().getText(R.string.wait));
+        blockButton.add(button);
+
+        main.setEnabled(false);
+
+        loginEditText.setEnabled(false);
+        passwordEditText.setEnabled(false);
+        logonButton.setEnabled(false);
+        regButton.setEnabled(false);
+        forgotPasswordButton.setEnabled(false);
+    }
+
+    private synchronized void unlockButton() {
+        for (Button elem : blockButton) {
+            elem.setText((String) elem.getTag());
+        }
+        blockButton.clear();
+
+        main.setEnabled(true);
+
+        loginEditText.setEnabled(true);
+        passwordEditText.setEnabled(true);
+        logonButton.setEnabled(true);
+        regButton.setEnabled(true);
+        forgotPasswordButton.setEnabled(true);
     }
 }

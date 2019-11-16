@@ -19,7 +19,9 @@ public class NetworkManager {
     private static final String name = "Сервиз Передачи данных через inet";
     public static String token = "";
     public static String refreshToken = "";
-    public static String host = "";
+    public static String host = "http://vuchobe.com/api/v1";
+
+    public static String mimeJson = "application/json; charset=utf-8";
 
     public enum Method {
         GET("GET"),
@@ -54,17 +56,18 @@ public class NetworkManager {
             }
         } catch (Exception ex) {
             //TODO edit-error
+
+            result.run(null, new NetworkException(ex));
             return;
         }
         try (InputStream inputStream = new ProgressInputStream(is, size)) {
             inputObject(path, method, type, inputStream, size, typeClass2, result);
-            return;
         } catch (IOException ex) {
             //TODO edit-error
-            return;
+            result.run(null, new NetworkException(ex));
         } catch (Exception ex) {
             //TODO edit-error
-            return;
+            result.run(null, new NetworkException(ex));
         }
     }
 
@@ -78,25 +81,25 @@ public class NetworkManager {
             }
         } catch (Exception ex) {
             //TODO edit-error
+            result.run(null, new NetworkException(ex));
             return;
         }
 
         try (InputStream inputStream = new ProgressInputStream(is, size)) {
             inputOutput(path, method, type, inputStream, size, result);
-            return;
         } catch (IOException ex) {
             //TODO edit-error
-            return;
+            result.run(null, new NetworkException(ex));
         } catch (Exception ex) {
             //TODO edit-error
-            return;
+            result.run(null, new NetworkException(ex));
         }
     }
 
     public static <T> void inputObject(String path, Method method, String type, InputStream input, int size, Class<T> typeClass, ManagerService.AsyncResult<T, NetworkException> result) {
         inputOutput(path, method, type, input, size, (body, error) -> {
             if (body == null || error != null) {
-                result.result(null, error);
+                result.run(null, error);
                 return;
             }
             try (BufferedInputStream inputStream = new ProgressInputStream(body.getInputStream(), body.getContentLength())) {
@@ -104,12 +107,14 @@ public class NetworkManager {
                 String encoding = body.getContentEncoding();
 
                 T obj = getTypeConvertor(contentType, encoding).decode(contentType, inputStream, typeClass);
-                result.result(obj, null);
+                result.run(obj, null);
                 return;
             } catch (IOException ex) {
                 //TODO edit - error
+                result.run(null, new NetworkException(ex));
             } catch (Exception ex) {
                 //TODO edit - error
+                result.run(null, new NetworkException(ex));
             }
         });
     }
@@ -148,14 +153,20 @@ public class NetworkManager {
                     }
                 } catch (IOException ex) {
                     //TODO edit - error
+                    result.run(connection, new NetworkException(ex));
+                    return;
                 }
             }
             //получаем ответ
-            result.result(connection, null);
+            connection.connect();
+            //TODO можно узнать код ошибки 404 и чтение из другого потока connection.getErrorStream()
+            result.run(connection, null);
         } catch (MalformedURLException ex) {
             //TODO edit - error
+            result.run(connection, new NetworkException(ex));
         } catch (IOException ex) {
             //TODO edit - error
+            result.run(connection, new NetworkException(ex));
         } finally {
             if (connection != null) connection.disconnect();
         }
@@ -164,11 +175,29 @@ public class NetworkManager {
     private static JsonConvertor jsonConvertor = new JsonConvertor();
 
     public static Convertor getTypeConvertor(String type) {
-        return getTypeConvertor(type, "UTF-8");//TODO см у типа а лишь потом брать utf-8
+        String[] list = type.split(";");
+        String typeReal = list[0].trim().toLowerCase();
+        String encoding = null;
+        if (list.length > 1) {
+            for (String elem : list) {
+                elem = elem.trim().toLowerCase();
+                String[] list2 = elem.split("=");
+                if (list2.length >= 2 && list2[0].startsWith("charset")) {
+                    encoding = list2[1].trim();
+                }
+            }
+        }
+        return getTypeConvertor(typeReal, encoding);
     }
 
     public static Convertor getTypeConvertor(String type, String encoding) {
-        return jsonConvertor;
+        switch (type) {
+            case "application/json":
+            case "text/json": {
+                return jsonConvertor.getForCharset(encoding);
+            }
+        }
+        return jsonConvertor;//default convertor
     }
 
     public static class NetworkException extends ManagerService.ServiceException {
