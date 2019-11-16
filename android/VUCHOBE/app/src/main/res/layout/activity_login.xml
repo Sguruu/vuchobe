@@ -36,7 +36,7 @@
         <EditText
             android:id="@+id/loginEditTextId"
             android:layout_width="match_parent"
-            android:layout_height="wrap_content"
+            android:layout_height="50dp"
             android:drawableStart="@android:drawable/sym_action_email"
             android:ems="10"
             android:hint="@string/description_login_input"
@@ -48,7 +48,7 @@
         <EditText
             android:id="@+id/passwordEditTextId"
             android:layout_width="match_parent"
-            android:layout_height="wrap_content"
+            android:layout_height="50dp"
             android:drawableStart="@android:drawable/ic_lock_idle_lock"
             android:drawableEnd="@android:drawable/ic_menu_view"
             android:ems="10"
@@ -77,6 +77,7 @@
 
         <Button
             android:id="@+id/forgotPasswordId"
+            style="@style/AppThemeButton.NoBorder"
             android:layout_width="match_parent"
             android:layout_height="48dp"
             android:text="@string/button_forgot" />
