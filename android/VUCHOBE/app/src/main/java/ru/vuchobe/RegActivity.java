@@ -8,6 +8,7 @@ import android.widget.Button;
 import android.widget.EditText;
 import android.widget.LinearLayout;
 
+import androidx.annotation.NonNull;
 import androidx.appcompat.app.AppCompatActivity;
 import ru.vuchobe.util.ui.OnClickDrawableTextView;
 
@@ -68,7 +69,7 @@ public class RegActivity extends AppCompatActivity {
         cancelButton = findViewById(R.id.buttonCancelId);
     }
 
-    private void showAndHidePassword(EditText editText) {
+    private void showAndHidePassword(@NonNull EditText editText) {
         int value = editText.getInputType() ^ InputType.TYPE_CLASS_TEXT;
         editText.setInputType(value);
     }
