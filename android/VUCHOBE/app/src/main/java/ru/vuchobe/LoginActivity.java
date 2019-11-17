@@ -1,6 +1,7 @@
 package ru.vuchobe;
 
 import android.annotation.SuppressLint;
+import android.content.Intent;
 import android.os.Bundle;
 import android.text.InputType;
 import android.view.MotionEvent;
@@ -85,11 +86,13 @@ public class LoginActivity extends ThreadAppCompatActivity {
                 AuthService.logon(login, password, (body, exception) -> {
                     unlockButton();
                     if (exception != null) {
-                        if (exception.getLoginMessages().length != 0) {
-                            loginEditText.setError(exception.getLoginMessages()[0]);
-                        }
                         if (exception.getPasswordMessages().length != 0) {
                             passwordEditText.setError(exception.getPasswordMessages()[0]);
+                            passwordEditText.requestFocus();
+                        }
+                        if (exception.getLoginMessages().length != 0) {
+                            loginEditText.setError(exception.getLoginMessages()[0]);
+                            passwordEditText.requestFocus();
                         }
                         if (exception.getOtherMessages().length != 0) {
                             Toast.makeText(
@@ -111,7 +114,8 @@ public class LoginActivity extends ThreadAppCompatActivity {
     }
 
     private void registration() {
-
+        Intent intent = new Intent(this, RegActivity.class);
+        this.startActivity(intent);
     }
 
     private void forgotPassword() {
