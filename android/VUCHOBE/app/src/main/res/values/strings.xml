@@ -9,4 +9,11 @@
     <string name="description_login_input">ВВЕДИТЕ ПОЧТУ</string>
     <string name="description_password_input">ВВЕДИТЕ ПАРОЛЬ</string>
     <string name="button_forgot">ЗАБЫЛИ ПАРОЛЬ</string>
+    <string name="wait">ПОДОЖДИТЕ</string>
+    <string name="title_register">РЕГИСТРАЦИЯ</string>
+    <string name="description_name_input">ВВЕДИТЕ ИМЯ ПОЛЬЗОВАТЕЛЯ</string>
+    <string name="description_repassword_input">ВВЕДИТЕ ПАРОЛЬ</string>
+    <string name="text_political_registration">Я соглашаюсь с Правилами пользования и Политикой в сфере конфиденциальности и персональных данных и даю согласие на обработку своих персональных данных</string>
+    <string name="button_reg_accept">ПРИНЯТЬ</string>
+    <string name="button_cancel">ОТМЕНИТЬ</string>
 </resources>

@@ -1,5 +1,7 @@
 package ru.vuchobe.service;
 
+import android.util.Log;
+
 import androidx.annotation.NonNull;
 import androidx.annotation.Nullable;
 
@@ -22,6 +24,14 @@ public final class ManagerService {
          * @param error  ошибка возникшая при выполнении ассинхронной задачи
          */
         void result(@Nullable T result, @Nullable K error);
+
+        default void run(@Nullable T result, @Nullable K error) {
+            try {
+                result(result, error);
+            } catch (Throwable ex) {
+                Log.e("AsyncResult", "CALLBACK ERROR", ex);
+            }
+        }
     }
 
     /**
@@ -33,7 +43,7 @@ public final class ManagerService {
             this(null);
         }
 
-        public ServiceException(@NonNull Throwable cause) {
+        public ServiceException(@Nullable Throwable cause) {
             super(cause);
         }
 
