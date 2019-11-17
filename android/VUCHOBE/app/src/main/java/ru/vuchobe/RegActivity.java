@@ -116,13 +116,12 @@ public class RegActivity extends ThreadAppCompatActivity {
                                 }
                                 return;
                             }
-                            //TODO Ложный правильный ответ (Не известно какой объект стоит ждать)
                             Toast.makeText(
                                     this,
                                     "OK",
                                     Toast.LENGTH_LONG
                             ).show();
-                            onBackPressed();
+                            onBackPressed();                                                        //back on prev activity (Возврата к предыдущему Activity)
                         }
                 )
         );
@@ -130,7 +129,7 @@ public class RegActivity extends ThreadAppCompatActivity {
     }
 
     private void cancel() {
-        this.onBackPressed();
+        this.onBackPressed();                                                                       //back on prev activity (Возврата к предыдущему Activity)
     }
 
     private ArrayList<Button> blockButton = new ArrayList<>();
