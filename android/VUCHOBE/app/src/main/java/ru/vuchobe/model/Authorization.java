@@ -16,7 +16,7 @@ public class Authorization {
 
     public @NonNull
     String getEmail() {
-        return email;
+        return (email != null) ? email : "";
     }
 
     public void setEmail(String email) {
@@ -25,7 +25,7 @@ public class Authorization {
 
     public @NonNull
     String getPassword() {
-        return password;
+        return (password != null) ? password : "";
     }
 
     public void setPassword(String password) {

@@ -3,21 +3,28 @@ package ru.vuchobe.service;
 import android.util.Patterns;
 
 import java.util.ArrayList;
+import java.util.Collections;
+import java.util.EnumMap;
 import java.util.List;
+import java.util.Map;
 
 import androidx.annotation.NonNull;
 import androidx.annotation.Nullable;
 import ru.vuchobe.model.Authorization;
 import ru.vuchobe.model.AuthorizationToken;
+import ru.vuchobe.model.Registration;
 import ru.vuchobe.util.threadUtil.ThreadService;
 
 public final class AuthService {
     public static final String name = "Сервиз авторизации";
 
     public static final String loginIsEmptyMsg = "Логин не может быть пустым";
+    public static final String emailIsEmptyMsg = "Введите электонную почту";
     public static final String passwordIsEmptyMsg = "Пароль не может быть пустым";
     public static final String loginIsNotEmailMsg = "Введите электронную почту";
     public static final String otherBodyNull = "Неверный логин или пароль";
+    public static final String passwordIsNonEquals = "Пароли не совпадают";
+    public static final String nameIsEmptyMsg = "Имя не может быть пустым";
 
     public static void logon(
             @Nullable String login,
@@ -41,7 +48,9 @@ public final class AuthService {
             passwordErr.add(passwordIsEmptyMsg);
         }
         if (!loginErr.isEmpty() || !passwordErr.isEmpty() || !otherErr.isEmpty()) {
-            ThreadService.get().asyncMain(() -> resultFunc.run(false, new AuthException(loginErr, passwordErr, otherErr)));
+            ThreadService.get().asyncMain(() ->
+                    resultFunc.run(false, new AuthException(loginErr, passwordErr, otherErr))
+            );
             return;
         }
 
@@ -109,6 +118,105 @@ public final class AuthService {
 
         public String[] getOtherMessages() {
             return otherMessages;
+        }
+    }
+
+    public static void registration(
+            @Nullable String email,
+            @Nullable String name,
+            @Nullable String password,
+            @Nullable String repassword,
+            @Nullable ManagerService.AsyncResult<Boolean, RegException> result
+    ) {
+        final ManagerService.AsyncResult<Boolean, RegException> resultFunc = (result != null) ? result : (r, e) -> {
+        };
+
+        email = (email != null) ? email.trim() : "";
+        name = (name != null) ? name.trim() : "";
+        password = (password != null) ? password : "";
+        repassword = (repassword != null) ? repassword : "";
+
+        EnumMap<RegField, String> errorMsgs = new EnumMap<>(RegField.class);
+
+        //find error
+        if (email.isEmpty()) {
+            errorMsgs.put(RegField.EMAIL, emailIsEmptyMsg);
+        } else if (!Patterns.EMAIL_ADDRESS.matcher(email).matches()) {
+            errorMsgs.put(RegField.EMAIL, emailIsEmptyMsg);
+        }
+
+        if (name.isEmpty()) {
+            errorMsgs.put(RegField.NAME, nameIsEmptyMsg);
+        }
+
+        if (password.isEmpty()) {
+            errorMsgs.put(RegField.PASSWORD, passwordIsEmptyMsg);
+        } else if (repassword.isEmpty()) {
+            errorMsgs.put(RegField.REPASSWORD, passwordIsEmptyMsg);
+        } else if (!password.equals(repassword)) {
+            errorMsgs.put(RegField.REPASSWORD, passwordIsNonEquals);
+        }
+
+        if (!errorMsgs.isEmpty()) {
+            ThreadService.get().asyncMain(() ->
+                    resultFunc.run(false, new RegException(errorMsgs))
+            );
+            return;
+        }
+
+        NetworkManager.objectOutput(
+                "/auth/registration/STUDENT",
+                NetworkManager.Method.POST,
+                NetworkManager.mimeJson,
+                Registration.class,
+                new Registration(name, email, password),
+                (body, error) -> ThreadService.get().asyncMain(() -> {
+                    if (error != null) {
+                        resultFunc.run(false, new RegException(error));
+                        return;
+                    }
+                    resultFunc.run(true, null);
+                })
+
+        );
+    }
+
+    public enum RegField {
+        EMAIL, NAME, PASSWORD, REPASSWORD, OTHER
+    }
+
+    public static class RegException extends ManagerService.ServiceException {
+        private Map<RegField, String> errorMsgs = Collections.EMPTY_MAP;
+
+        public RegException(EnumMap<RegField, String> errorMsgs) {
+            this.errorMsgs = errorMsgs;
+        }
+
+        public RegException(@Nullable Throwable cause) {
+            super(cause);
+            if (cause != null) {
+                errorMsgs = new EnumMap<>(RegField.class);
+                errorMsgs.put(RegField.OTHER, cause.getMessage());
+            }
+        }
+
+        @NonNull
+        @Override
+        public String getServiceName() {
+            return AuthService.name;
+        }
+
+        public boolean isEmpty() {
+            return errorMsgs.isEmpty();
+        }
+
+        public boolean isExist(RegField field) {
+            return errorMsgs.containsKey(field);
+        }
+
+        public String getMessageFor(RegField field) {
+            String result = errorMsgs.get(field);
+            return (result != null) ? result : "";
         }
     }
 }

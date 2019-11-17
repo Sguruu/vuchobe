@@ -122,7 +122,7 @@ public class LoginActivity extends ThreadAppCompatActivity {
 
     }
 
-    private ArrayList<Button> blockButton = new ArrayList();
+    private ArrayList<Button> blockButton = new ArrayList<>();
 
     private synchronized void lockButton(@NonNull Button button) {
         if (button == null) return;

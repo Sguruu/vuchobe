@@ -11,7 +11,7 @@ public class AuthorizationToken {
     }
 
     public String getAccessToken() {
-        return access_token;
+        return (access_token != null) ? access_token : "";
     }
 
     public void setAccessToken(String accessToken) {
