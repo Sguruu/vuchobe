@@ -35,8 +35,7 @@
 
         <EditText
             android:id="@+id/emailEditTextId"
-            android:layout_width="match_parent"
-            android:layout_height="50dp"
+            style="@style/AppThemeEditText"
             android:drawableStart="@android:drawable/sym_action_email"
             android:ems="10"
             android:hint="@string/description_login_input"
@@ -46,8 +45,7 @@
 
         <EditText
             android:id="@+id/nameEditTextId"
-            android:layout_width="match_parent"
-            android:layout_height="50dp"
+            style="@style/AppThemeEditText"
             android:drawableStart="@android:drawable/ic_menu_myplaces"
             android:ems="10"
             android:hint="@string/description_name_input"
@@ -57,8 +55,7 @@
 
         <EditText
             android:id="@+id/passwordEditTextId"
-            android:layout_width="match_parent"
-            android:layout_height="50dp"
+            style="@style/AppThemeEditText"
             android:drawableStart="@android:drawable/ic_lock_idle_lock"
             android:drawableEnd="@android:drawable/ic_menu_view"
             android:ems="10"
@@ -69,8 +66,7 @@
 
         <EditText
             android:id="@+id/repasswordEditTextId"
-            android:layout_width="match_parent"
-            android:layout_height="50dp"
+            style="@style/AppThemeEditText"
             android:drawableStart="@android:drawable/ic_lock_idle_lock"
             android:drawableEnd="@android:drawable/ic_menu_view"
             android:ems="10"
@@ -81,21 +77,19 @@
 
         <EditText
             android:id="@+id/politiceRegistrationId"
-            android:layout_width="match_parent"
+            style="@style/AppThemeEditText"
             android:layout_height="wrap_content"
             android:drawableStart="@android:drawable/ic_input_get"
             android:editable="false"
             android:ems="10"
             android:importantForAutofill="no"
-            android:inputType="none"
             android:text="@string/text_political_registration"
             android:textSize="10sp"
             tools:targetApi="o" />
 
         <Button
             android:id="@+id/buttonRegId"
-            android:layout_width="match_parent"
-            android:layout_height="48dp"
+            style="@style/AppThemeButton"
             android:layout_marginTop="5dp"
             android:layout_marginBottom="5dp"
             android:maxWidth="350dp"
@@ -103,8 +97,7 @@
 
         <Button
             android:id="@+id/buttonCancelId"
-            android:layout_width="match_parent"
-            android:layout_height="48dp"
+            style="@style/AppThemeButton"
             android:layout_marginTop="5dp"
             android:layout_marginBottom="5dp"
             android:maxWidth="350dp"
