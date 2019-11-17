@@ -24,6 +24,9 @@ import ru.vuchobe.util.ui.OnClickDrawableTextView;
  */
 public class LoginActivity extends ThreadAppCompatActivity {
 
+    /**
+     * UI elements
+     */
     private LinearLayout main;
 
     private EditText loginEditText;
@@ -38,72 +41,85 @@ public class LoginActivity extends ThreadAppCompatActivity {
         super.onCreate(savedInstanceState);
         setContentView(R.layout.activity_login);
 
-        initUI();
+        initUI();                                                                                   //find all UI(поиск всех UI елементов)
 
+        //Listener Click By Icon editText(Прослушивание нажатия на иконки для поля ввода)
         passwordEditText.setOnTouchListener((OnClickDrawableTextView) (view, position, drawable, event) -> {
             EditText editText = (EditText) view;
-            if (position == OnClickDrawableTextView.Position.RIGHT && event.getActionMasked() == MotionEvent.ACTION_UP) {
+            if (position == OnClickDrawableTextView.Position.RIGHT && event.getActionMasked() == MotionEvent.ACTION_UP) {   //Если нажата правая иконка
                 showAndHidePassword(editText);
                 return true;
             }
             return false;
         });
 
-        logonButton.setActivated(true);
-        logonButton.setOnClickListener((view) ->
-                logon(loginEditText.getText().toString(), passwordEditText.getText().toString())
+        logonButton.setActivated(true);                                                             //set Button main (Color white) (Устанавливаем как главную)
+        logonButton.setOnClickListener((view) ->                                                    //listener click by logon button (Прослушивание нажатия на кнопку ВОЙТИ)
+                logon(loginEditText.getText().toString(), passwordEditText.getText().toString())    //Process logon (Выполнение входа)
         );
 
-        regButton.setOnClickListener((view) ->
-                registration()
+        regButton.setOnClickListener((view) ->                                                      //listener click by registration button (Прослушивание нажатия на кнопку РЕГИСТРАЦИЯ)
+                registration()                                                                      //Process registration (Выполнение регистрации)
         );
 
-        forgotPasswordButton.setOnClickListener((view) ->
-                forgotPassword()
+        forgotPasswordButton.setOnClickListener((view) ->                                           //listener click by forgot password button (Прослушивание нажатия на кнопку ЗАБЫЛИ ПАРОЛЬ)
+                forgotPassword()                                                                    //Process forgot (Выполнение востановления пароля)
         );
 
     }
 
+    /**
+     * find all uses UI elements
+     * Поиск всех UI элементов
+     */
     private void initUI() {
-        main = findViewById(R.id.mainId);
+        main = findViewById(R.id.mainId);                                                           //Container all next UI elements (Контейнер всех следующих UI)
 
-        loginEditText = findViewById(R.id.loginEditTextId);
-        passwordEditText = findViewById(R.id.passwordEditTextId);
+        loginEditText = findViewById(R.id.loginEditTextId);                                         //login input field UI (Поле ввода логина UI)
+        passwordEditText = findViewById(R.id.passwordEditTextId);                                   //password input field UI (Поле ввода пароля UI)
 
-        logonButton = findViewById(R.id.buttonLoginId);
-        regButton = findViewById(R.id.buttonRegId);
-        forgotPasswordButton = findViewById(R.id.forgotPasswordId);
+        logonButton = findViewById(R.id.buttonLoginId);                                             //logon button UI (Кнопка ВОЙТИ UI)
+        regButton = findViewById(R.id.buttonRegId);                                                 //reg button UI (Кнопка РЕГИСТАЦИЯ UI)
+        forgotPasswordButton = findViewById(R.id.forgotPasswordId);                                 //forgot password button UI (Кнопка забыли пароль UI)
     }
 
     private void showAndHidePassword(EditText editText) {
-        int value = editText.getInputType() ^ InputType.TYPE_CLASS_TEXT;
-        editText.setInputType(value);
+        int value = editText.getInputType() ^ InputType.TYPE_CLASS_TEXT;                            //revers/switch show/hide password in UI (переключение видимости пароля в UI)
+        editText.setInputType(value);                                                               //set new value (установка нового значения)
     }
 
+    /**
+     * Process logon
+     * Выполнение авторизации
+     *
+     * @param login    логин
+     * @param password пароль
+     * @return запустилась ли задача
+     */
     private boolean logon(String login, String password) {
-        lockButton(logonButton);
-        ThreadTask threadTask = this.asyncIO(() ->
-                AuthService.logon(login, password, (body, exception) -> {
-                    unlockButton();
-                    if (exception != null) {
-                        if (exception.getPasswordMessages().length != 0) {
+        lockButton(logonButton);                                                                    //off all buttons (деактивация всех кнопок)
+        ThreadTask threadTask = this.asyncIO(() ->                                                  //asunc run code in threadIO (Запуск кода в отдельном потоке IO)
+                AuthService.logon(login, password, (body, exception) -> {                           //run network query authorization and take result (запуск интернет запроса авторизации и получение результата)
+                    unlockButton();                                                                 //on all buttons. finish query (активировать все кнопки. Запрос уже выполнен)
+                    if (exception != null) {                                                        //if exception show message for user (если получили ошибку вывести сообщение пользователю)
+                        if (exception.getPasswordMessages().length != 0) {                          //password exception (ошибка в пароле)
                             passwordEditText.setError(exception.getPasswordMessages()[0]);
                             passwordEditText.requestFocus();
                         }
-                        if (exception.getLoginMessages().length != 0) {
+                        if (exception.getLoginMessages().length != 0) {                             //login exception (ошибка в логине)
                             loginEditText.setError(exception.getLoginMessages()[0]);
                             passwordEditText.requestFocus();
                         }
-                        if (exception.getOtherMessages().length != 0) {
+                        if (exception.getOtherMessages().length != 0) {                             //other exception (другие ошибки (нет интернета или json не сконвертировался или сервер вернул ошибку))
                             Toast.makeText(
                                     this,
                                     exception.getOtherMessages()[0],
                                     Toast.LENGTH_LONG
                             ).show();
                         }
-                        return;
+                        return;                                                                     //if exception then return (Если есть ошибка то прекратить выполнение)
                     }
-                    Toast.makeText(
+                    Toast.makeText(                                                                 //all ok authorization executed (Авторизация выполнена успешно)
                             this,
                             "OK",
                             Toast.LENGTH_LONG
@@ -113,11 +129,19 @@ public class LoginActivity extends ThreadAppCompatActivity {
         return threadTask.getStatus().isOK;
     }
 
+    /**
+     * Process registration
+     * Выполнение регистрации
+     */
     private void registration() {
-        Intent intent = new Intent(this, RegActivity.class);
-        this.startActivity(intent);
+        Intent intent = new Intent(this, RegActivity.class);                          //Create Intent on RegActivity (Создаем намерение на Activity регистрация)
+        this.startActivity(intent);                                                                 //open Activity (Переход на Activity Регистрации)
     }
 
+    /**
+     * Process forgot password
+     * Выполнение востановления пароля
+     */
     private void forgotPassword() {
 
     }
