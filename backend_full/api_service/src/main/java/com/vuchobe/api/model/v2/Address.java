@@ -16,10 +16,13 @@ public class Address {
 
     @Id
     @GeneratedValue
+    @JsonView({Views.List.class, Institute.View.Save.class,
+            Faculty.View.Save.class, Activity.View.Save.class, Timetable.View.List.class})
     private Long id;
 
     @Column(length = 550)
-    @JsonView({Views.List.class, Institute.View.Save.class, Faculty.View.Save.class, Activity.View.Save.class,})
+    @JsonView({Views.List.class, Institute.View.Save.class, 
+            Faculty.View.Save.class, Activity.View.Save.class, Timetable.View.List.class})
     private String fullAddress;
     @Column
     private String city;

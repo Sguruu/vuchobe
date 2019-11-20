@@ -28,6 +28,8 @@ public class Activity {
     private Long id;
     
     @Column(name = "date_start")
+    @JsonView({View.Save.class, View.List.class})
+    @JsonFormat(pattern = "yyyy-MM-dd HH:mm:ss")
     private LocalDateTime dateStart;
     
     @ManyToOne()

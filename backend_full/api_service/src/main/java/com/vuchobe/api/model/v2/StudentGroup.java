@@ -1,9 +1,6 @@
 package com.vuchobe.api.model.v2;
 
-import com.fasterxml.jackson.annotation.JsonIdentityInfo;
-import com.fasterxml.jackson.annotation.JsonIdentityReference;
-import com.fasterxml.jackson.annotation.JsonView;
-import com.fasterxml.jackson.annotation.ObjectIdGenerators;
+import com.fasterxml.jackson.annotation.*;
 import com.vuchobe.api.views.Views;
 import lombok.Data;
 import lombok.NoArgsConstructor;
@@ -20,15 +17,15 @@ public class StudentGroup {
 
     @Id
     @GeneratedValue
-    @JsonView({View.Update.class, View.List.class})
+    @JsonView({View.Update.class, View.List.class, Timetable.View.List.class})
     private Long id;
 
     @Column
-    @JsonView({View.Save.class, View.List.class})
+    @JsonView({View.Save.class, View.List.class, Timetable.View.List.class})
     private String name;
 
     @Column(name = "create_year")
-    @JsonView({View.Save.class, View.List.class})
+    @JsonView({View.Save.class, View.List.class, Timetable.View.List.class})
     private Integer year;
 
     @ManyToMany
@@ -54,7 +51,7 @@ public class StudentGroup {
             generator = ObjectIdGenerators.PropertyGenerator.class,
             property = "id")
     @JsonIdentityReference(alwaysAsId = true)
-    @JsonView(Views.Default.class)
+    @JsonIgnore
     private Set<Timetable> timetables = new HashSet<>();
 
     @Transient
