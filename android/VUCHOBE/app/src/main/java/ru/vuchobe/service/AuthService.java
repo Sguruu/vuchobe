@@ -164,12 +164,13 @@ public final class AuthService {
             return;
         }
 
-        NetworkManager.objectOutput(
+        NetworkManager.objectObject(
                 "/auth/registration/STUDENT",
                 NetworkManager.Method.POST,
                 NetworkManager.mimeJson,
                 Registration.class,
                 new Registration(name, email, password),
+                Integer.class,
                 (body, error) -> ThreadService.get().asyncMain(() -> {
                     if (error != null) {
                         resultFunc.run(false, new RegException(error));
