@@ -10,10 +10,13 @@ import android.widget.EditText;
 import android.widget.LinearLayout;
 import android.widget.Toast;
 
+import com.google.android.material.snackbar.Snackbar;
+
 import java.util.ArrayList;
 
 import androidx.annotation.NonNull;
 import androidx.annotation.Nullable;
+import ru.vuchobe.main.MainActivity;
 import ru.vuchobe.service.AuthService;
 import ru.vuchobe.util.threadUtil.ThreadAppCompatActivity;
 import ru.vuchobe.util.threadUtil.ThreadTask;
@@ -111,6 +114,8 @@ public class LoginActivity extends ThreadAppCompatActivity {
                             passwordEditText.requestFocus();
                         }
                         if (exception.getOtherMessages().length != 0) {                             //other exception (другие ошибки (нет интернета или json не сконвертировался или сервер вернул ошибку))
+                            Snackbar.make(this.main, exception.getOtherMessages()[0], Snackbar.LENGTH_LONG)
+                                    .setAction("Action", null).show();
                             Toast.makeText(
                                     this,
                                     exception.getOtherMessages()[0],
@@ -119,11 +124,10 @@ public class LoginActivity extends ThreadAppCompatActivity {
                         }
                         return;                                                                     //if exception then return (Если есть ошибка то прекратить выполнение)
                     }
-                    Toast.makeText(                                                                 //all ok authorization executed (Авторизация выполнена успешно)
-                            this,
-                            "OK",
-                            Toast.LENGTH_LONG
-                    ).show();
+                    Intent intent = new Intent(this, MainActivity.class);
+                    intent.addFlags(Intent.FLAG_ACTIVITY_CLEAR_TOP);
+                    intent.addFlags(Intent.FLAG_ACTIVITY_NEW_TASK);
+                    this.startActivity(intent);
                 })
         );
         return threadTask.getStatus().isOK;

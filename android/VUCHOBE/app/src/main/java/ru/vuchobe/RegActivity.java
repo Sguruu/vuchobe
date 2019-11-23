@@ -9,6 +9,8 @@ import android.widget.EditText;
 import android.widget.LinearLayout;
 import android.widget.Toast;
 
+import com.google.android.material.snackbar.Snackbar;
+
 import java.util.ArrayList;
 
 import androidx.annotation.NonNull;
@@ -108,6 +110,8 @@ public class RegActivity extends ThreadAppCompatActivity {
                                     emailEditText.requestFocus();
                                 }
                                 if (exception.isExist(AuthService.RegField.OTHER)) {
+                                    Snackbar.make(this.main, exception.getMessageFor(AuthService.RegField.OTHER), Snackbar.LENGTH_LONG)
+                                            .setAction("Action", null).show();
                                     Toast.makeText(
                                             this,
                                             exception.getMessageFor(AuthService.RegField.OTHER),
