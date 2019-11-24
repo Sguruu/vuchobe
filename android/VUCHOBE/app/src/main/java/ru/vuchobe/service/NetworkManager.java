@@ -131,6 +131,9 @@ public class NetworkManager {
             connection = (HttpURLConnection) url.openConnection();
             connection.setRequestMethod(method.get());
             connection.setDoInput(true);
+            if (token != null && !token.isEmpty()) {
+                connection.setRequestProperty("Authorization", "Bearer " + token);
+            }
             connection.setConnectTimeout(5000);
             connection.setReadTimeout(5000);
             if (type == null) {
