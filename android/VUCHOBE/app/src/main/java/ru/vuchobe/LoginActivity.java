@@ -10,8 +10,6 @@ import android.widget.EditText;
 import android.widget.LinearLayout;
 import android.widget.Toast;
 
-import com.google.android.material.snackbar.Snackbar;
-
 import java.util.ArrayList;
 
 import androidx.annotation.NonNull;
@@ -101,9 +99,8 @@ public class LoginActivity extends ThreadAppCompatActivity {
      */
     private boolean logon(String login, String password) {
         lockButton(logonButton);                                                                    //off all buttons (деактивация всех кнопок)
-        ThreadTask threadTask = this.asyncIO(() ->                                                  //asunc run code in threadIO (Запуск кода в отдельном потоке IO)
+        ThreadTask threadTask = this.asyncNetwork(() ->                                             //asunc run code in threadNetwork (Запуск кода в отдельном потоке Network)
                 AuthService.logon(login, password, (body, exception) -> {                           //run network query authorization and take result (запуск интернет запроса авторизации и получение результата)
-                    unlockButton();                                                                 //on all buttons. finish query (активировать все кнопки. Запрос уже выполнен)
                     if (exception != null) {                                                        //if exception show message for user (если получили ошибку вывести сообщение пользователю)
                         if (exception.getPasswordMessages().length != 0) {                          //password exception (ошибка в пароле)
                             passwordEditText.setError(exception.getPasswordMessages()[0]);
@@ -114,18 +111,19 @@ public class LoginActivity extends ThreadAppCompatActivity {
                             passwordEditText.requestFocus();
                         }
                         if (exception.getOtherMessages().length != 0) {                             //other exception (другие ошибки (нет интернета или json не сконвертировался или сервер вернул ошибку))
-                            Snackbar.make(this.main, exception.getOtherMessages()[0], Snackbar.LENGTH_LONG)
-                                    .setAction("Action", null).show();
+                            /*Snackbar.make(this.main, exception.getOtherMessages()[0], Snackbar.LENGTH_LONG)
+                                    .setAction("Action", null).show();*/
                             Toast.makeText(
                                     this,
                                     exception.getOtherMessages()[0],
                                     Toast.LENGTH_LONG
                             ).show();
                         }
+                        unlockButton();                                                             //on all buttons. finish query (активировать все кнопки. Запрос уже выполнен)
                         return;                                                                     //if exception then return (Если есть ошибка то прекратить выполнение)
                     }
                     Intent intent = new Intent(this, MainActivity.class);
-                    intent.addFlags(Intent.FLAG_ACTIVITY_CLEAR_TOP);
+                    intent.addFlags(Intent.FLAG_ACTIVITY_CLEAR_TASK);
                     intent.addFlags(Intent.FLAG_ACTIVITY_NEW_TASK);
                     this.startActivity(intent);
                 })

@@ -56,12 +56,16 @@ public class MainActivity extends AppCompatActivity {
         @NonNull
         @Override
         public Fragment createFragment(int position) {
+            switch (position) {
+                case 0:
+                    return EventListFragment.newInstance();
+            }
             return null;
         }
 
         @Override
         public int getItemCount() {
-            return 0;
+            return 1;
         }
     }
 }
