@@ -16,4 +16,9 @@
     <string name="text_political_registration">Я соглашаюсь с Правилами пользования и Политикой в сфере конфиденциальности и персональных данных и даю согласие на обработку своих персональных данных</string>
     <string name="button_reg_accept">ПРИНЯТЬ</string>
     <string name="button_cancel">ОТМЕНИТЬ</string>
+    <string name="title_activity_main">MainActivity</string>
+    <string name="action_settings">Settings</string>
+
+    <!-- TODO: Remove or change this placeholder text -->
+    <string name="hello_blank_fragment">Hello blank fragment</string>
 </resources>
