@@ -20,7 +20,7 @@ public class JsonPage<T> extends PageImpl<T> {
     }
 
     public JsonPage(Page<T> page) {
-        super(page.getContent(), page.getPageable(), page.getTotalPages());
+        super(page.getContent(), page.getPageable(), page.getTotalPages() * 2);
         this.sort = new JsonSort(page.getSort().get().collect(Collectors.toList()));
     }
 

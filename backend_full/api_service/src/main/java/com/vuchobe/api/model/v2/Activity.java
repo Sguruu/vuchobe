@@ -34,6 +34,7 @@ public class Activity {
     
     @ManyToOne()
     @JoinColumn(name = "address_id")
+    @JsonView({View.Save.class, View.List.class})
     private Address address;
 
     @Column

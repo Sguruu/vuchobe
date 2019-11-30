@@ -22,6 +22,7 @@ import java.util.Set;
 public class ActivityService {
 
     private final ActivityDao activityDao;
+    private final AddressDao addressDao;
     private final ActivityTypeDao activityTypeDao;
     private final AuthUserDao authUserDao;
     private final InstituteDao instituteDao;
@@ -32,14 +33,20 @@ public class ActivityService {
     public Activity save(Activity activity) {
         if (activity.getInstituteId() == null && activity.getOrganizationId() == null)
             throw new NullPointerException("Укажите кто проводит меропртиятие");
-        if (activity.getTypeIds() == null) throw new NullPointerException("Выберите тип мероприятия.");
+        if (activity.getTypeIds() == null || activity.getTypeIds().size() == 0) throw new NullPointerException("Выберите тип мероприятия.");
         else {
             ActivityType activityType = new ActivityType();
             if (activity.getTypeIds().size() > 0) {
                 activityType.setId(activity.getTypeIds().get(0));
+                activityTypeDao.findById(activityType.getId()).orElseThrow(() ->new NullPointerException("Мероприятия с идентификатором " 
+                        + activityType.getId() + " не найдено"));
             }
 
             activity.setType(activityType);
+        }
+        
+        if (activity.getAddress() != null) {
+            addressDao.save(activity.getAddress());
         }
         if (activity.getInstituteId() != null) {
             Institute institute = instituteDao.findById(activity.getInstituteId())
@@ -61,6 +68,9 @@ public class ActivityService {
         Activity activity1Entity = activityDao.findById(activity.getId())
                 .orElseThrow(() -> new NullPointerException("Мероприятие с таким идентификатором не найден"));
         activity1Entity.updateEntity(activity);
+        if (activity.getAddress() != null) {
+            addressDao.save(activity.getAddress());
+        }
         if (activity.getImagesBase64().size() > 0) {
             saveImagesToActivity(activity);
         }
@@ -111,6 +121,7 @@ public class ActivityService {
         return activityTypeDao.findAll(pageable);
     }
 
+    @Transactional
     public ActivityType saveType(ActivityType activityType) {
         return activityTypeDao.save(activityType);
     }

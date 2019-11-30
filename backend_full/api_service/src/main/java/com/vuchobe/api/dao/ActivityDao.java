@@ -8,6 +8,6 @@ import org.springframework.data.jpa.repository.JpaRepository;
 import org.springframework.data.jpa.repository.Query;
 
 public interface ActivityDao extends JpaRepository<Activity, Long> {
-    @Query("SELECT a FROM activity a JOIN a.user u WHERE u.id = ?1")
+    @Query(value = "SELECT a FROM activity a JOIN a.user u WHERE u.id = ?1", countQuery = "SELECT count(a)FROM activity a JOIN a.user u WHERE u.id = ?1")
     Page<Activity> findAllByActivityUser(Long userId, Pageable pageable);
 }
