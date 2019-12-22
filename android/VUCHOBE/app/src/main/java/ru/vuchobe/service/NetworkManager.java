@@ -10,6 +10,7 @@ import java.net.MalformedURLException;
 import java.net.URL;
 
 import androidx.annotation.NonNull;
+import ru.vuchobe.util.NetworkUtils.ProgressInputStream;
 import ru.vuchobe.util.convertors.Convertor;
 import ru.vuchobe.util.convertors.JsonConvertor;
 import ru.vuchobe.util.threadUtil.ThreadService;
@@ -46,13 +47,18 @@ public class NetworkManager {
         }
     }
 
-    public static <K, T> void objectObject(String path, Method method, String type, Class<K> typeClass, K body, Class<T> typeClass2, ManagerService.AsyncResult<T, NetworkException> result) {
+    private static final ByteArrayInputStream EMPTY_BYTE_INPUT_STREAM = new ByteArrayInputStream(new byte[0]);
+    public static <K, T> void objectObject(String path, Method method, String type, Class<? extends K> typeClass, K body, Class<? extends T> typeClass2, ManagerService.AsyncResult<T, NetworkException> result) {
         InputStream is = null;
         int size = 0;
         try {
-            is = getTypeConvertor(type).encode(type, body, typeClass);
-            if (is instanceof ByteArrayInputStream) {
-                size = ((ByteArrayInputStream) is).available();
+            if(type == null && body == null && typeClass == null){
+                is = EMPTY_BYTE_INPUT_STREAM;
+            }else {
+                is = getTypeConvertor(type).encode(type, body, typeClass);
+                if (is instanceof ByteArrayInputStream) {
+                    size = ((ByteArrayInputStream) is).available();
+                }
             }
         } catch (Exception ex) {
             //TODO edit-error
@@ -75,9 +81,13 @@ public class NetworkManager {
         InputStream is;
         int size = 0;
         try {
-            is = getTypeConvertor(type).encode(type, body, typeClass);
-            if (is instanceof ByteArrayInputStream) {
-                size = ((ByteArrayInputStream) is).available();
+            if(type == null && body == null && typeClass == null){
+                is = EMPTY_BYTE_INPUT_STREAM;
+            }else {
+                is = getTypeConvertor(type).encode(type, body, typeClass);
+                if (is instanceof ByteArrayInputStream) {
+                    size = ((ByteArrayInputStream) is).available();
+                }
             }
         } catch (Exception ex) {
             //TODO edit-error
@@ -96,7 +106,7 @@ public class NetworkManager {
         }
     }
 
-    public static <T> void inputObject(String path, Method method, String type, InputStream input, int size, Class<T> typeClass, ManagerService.AsyncResult<T, NetworkException> result) {
+    public static <T> void inputObject(String path, Method method, String type, InputStream input, int size, Class<? extends T> typeClass, ManagerService.AsyncResult<T, NetworkException> result) {
         inputOutput(path, method, type, input, size, (body, error) -> {
             if (body == null || error != null) {
                 result.run(null, error);
@@ -134,12 +144,13 @@ public class NetworkManager {
             if (token != null && !token.isEmpty()) {
                 connection.setRequestProperty("Authorization", "Bearer " + token);
             }
-            connection.setConnectTimeout(5000);
-            connection.setReadTimeout(5000);
-            if (type == null) {
-                type = "application/json";
-            }
-            if (input != null) {
+            connection.setConnectTimeout(6000);
+            connection.setReadTimeout(6000);
+
+            if (input != null && (method != Method.GET || (type != null && type.isEmpty()))) {
+                if (type == null) {
+                    type = "application/json";
+                }
                 connection.setDoOutput(true);
                 connection.setRequestProperty("Content-Type", type);
                 if (size > 0) {
@@ -171,16 +182,19 @@ public class NetworkManager {
             //TODO edit - error
             result.run(connection, new NetworkException(ex));
         } finally {
-            if (connection != null) connection.disconnect();
+            //if (connection != null) connection.disconnect();
         }
     }
 
     private static JsonConvertor jsonConvertor = new JsonConvertor();
 
     public static Convertor getTypeConvertor(String type) {
+        return getTypeConvertor(type, "");
+    }
+
+    public static Convertor getTypeConvertor(String type, String encoding) {
         String[] list = type.split(";");
         String typeReal = list[0].trim().toLowerCase();
-        String encoding = null;
         if (list.length > 1) {
             for (String elem : list) {
                 elem = elem.trim().toLowerCase();
@@ -190,11 +204,7 @@ public class NetworkManager {
                 }
             }
         }
-        return getTypeConvertor(typeReal, encoding);
-    }
-
-    public static Convertor getTypeConvertor(String type, String encoding) {
-        switch (type) {
+        switch (typeReal) {
             case "application/json":
             case "text/json": {
                 return jsonConvertor.getForCharset(encoding);
@@ -216,77 +226,6 @@ public class NetworkManager {
         @Override
         public String getServiceName() {
             return NetworkManager.name;
-        }
-    }
-
-    public static class ProgressInputStream extends BufferedInputStream {
-        ThreadTask task;
-        long sizeData;
-        long progressStart = 0;
-        long position = 0;
-        boolean isUpdate;
-
-        public ProgressInputStream(InputStream input, long size) {
-            super(input);
-            task = ThreadService.get();
-            sizeData = size;
-            if (task != null) {
-                progressStart = task.getProgress();
-                task.setProgressMax(task.getProgressMax() + ((sizeData > 0) ? sizeData : 100L));
-            }
-            isUpdate = task != null && sizeData > 0;
-        }
-
-        @Override
-        public synchronized int read() throws IOException {
-            int result = super.read();
-            if (result > 0 && isUpdate) {
-                position++;
-                task.setProgress(task.getProgress() + position);
-            }
-            return result;
-        }
-
-        @Override
-        public int read(byte[] b) throws IOException {
-            return read(b, 0, b.length);
-        }
-
-        @Override
-        public synchronized int read(byte[] b, int off, int len) throws IOException {
-            int length = super.read(b, off, len);
-            if (length > 0 && isUpdate) {
-                position += length;
-                task.setProgress(task.getProgress() + position);
-            }
-            return length;
-        }
-
-        @Override
-        public synchronized long skip(long n) throws IOException {
-            long length = super.skip(n);
-            if (length > 0 && isUpdate) {
-                position += length;
-                task.setProgress(progressStart + position);
-            }
-            return length;
-        }
-
-        @Override
-        public synchronized void reset() throws IOException {
-            if (markpos > 0 && isUpdate) {
-                task.setProgress(task.getProgress() + markpos - pos);
-            }
-            super.reset();
-        }
-
-        @Override
-        public void close() throws IOException {
-            if (task != null) {
-                task.setProgressMax(progressStart + position);
-                task.setProgress(task.getProgressMax());
-            }
-            super.close();
         }
     }
 }
