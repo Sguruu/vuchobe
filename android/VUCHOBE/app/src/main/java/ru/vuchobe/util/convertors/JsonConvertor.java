@@ -1,6 +1,7 @@
 package ru.vuchobe.util.convertors;
 
 import com.google.gson.Gson;
+import com.google.gson.GsonBuilder;
 
 import java.io.ByteArrayInputStream;
 import java.io.InputStream;
@@ -14,6 +15,7 @@ public class JsonConvertor /*extends InputStream*/ implements Convertor {
     private Charset charset = Charset.forName("utf-8");
 
     public JsonConvertor() {
+
     }
 
     private JsonConvertor(Charset charset) {
@@ -22,14 +24,14 @@ public class JsonConvertor /*extends InputStream*/ implements Convertor {
 
     //TODO можно изменить но не сегодня
     @Override
-    public <T> InputStream encode(String type, T obj, Class<T> clazz) throws Exception {
+    public <T> InputStream encode(String type, T obj, Class<? extends T> clazz) throws Exception {
         String string = gson.toJson(obj, clazz);
         return new ByteArrayInputStream(string.getBytes(charset));
     }
 
     //TODO можно изменить но не сегодня
     @Override
-    public <T> T decode(String type, InputStream stream, Class<T> clazz) throws Exception {
+    public <T> T decode(String type, InputStream stream, Class<? extends T> clazz) throws Exception {
         return gson.fromJson(new InputStreamReader(stream, charset), clazz);
     }
 

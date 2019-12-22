@@ -10,17 +10,17 @@ import androidx.annotation.Nullable;
  */
 public interface ThreadLooperGlobal extends ThreadLooper {
     default @NonNull
-    ThreadTask asyncMain(ThreadService.Unique unique, int uniqueNum, int timeStart, int timeReplay, int count, @NonNull ThreadTask task) {
+    ThreadTask asyncMain(ThreadService.Unique unique, int uniqueNum, int timeStart, int timeReplay, int count, @NonNull IThreadTask task) {
         return asyncMainGlobal(unique, uniqueNum, timeStart, timeReplay, count, task);
     }
 
     default @NonNull
-    ThreadTask asyncIO(ThreadService.Unique unique, int uniqueNum, int timeStart, int timeReplay, int count, @NonNull ThreadTask task) {
+    ThreadTask asyncIO(ThreadService.Unique unique, int uniqueNum, int timeStart, int timeReplay, int count, @NonNull IThreadTask task) {
         return asyncIOGlobal(unique, uniqueNum, timeStart, timeReplay, count, task);
     }
 
     default @NonNull
-    ThreadTask asyncNetwork(ThreadService.Unique unique, int uniqueNum, int timeStart, int timeReplay, int count, @NonNull ThreadTask task) {
+    ThreadTask asyncNetwork(ThreadService.Unique unique, int uniqueNum, int timeStart, int timeReplay, int count, @NonNull IThreadTask task) {
         return asyncNetworkGlobal(unique, uniqueNum, timeStart, timeReplay, count, task);
     }
 

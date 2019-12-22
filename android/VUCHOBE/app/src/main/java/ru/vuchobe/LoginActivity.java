@@ -17,6 +17,7 @@ import androidx.annotation.Nullable;
 import ru.vuchobe.main.MainActivity;
 import ru.vuchobe.service.AuthService;
 import ru.vuchobe.util.threadUtil.ThreadAppCompatActivity;
+import ru.vuchobe.util.threadUtil.IThreadTask;
 import ru.vuchobe.util.threadUtil.ThreadTask;
 import ru.vuchobe.util.ui.OnClickDrawableTextView;
 
@@ -99,7 +100,7 @@ public class LoginActivity extends ThreadAppCompatActivity {
      */
     private boolean logon(String login, String password) {
         lockButton(logonButton);                                                                    //off all buttons (деактивация всех кнопок)
-        ThreadTask threadTask = this.asyncNetwork(() ->                                             //asunc run code in threadNetwork (Запуск кода в отдельном потоке Network)
+        ThreadTask threadTask = this.asyncNetwork((ThreadTask taskNetwork) ->                       //asunc run code in threadNetwork (Запуск кода в отдельном потоке Network)
                 AuthService.logon(login, password, (body, exception) -> {                           //run network query authorization and take result (запуск интернет запроса авторизации и получение результата)
                     if (exception != null) {                                                        //if exception show message for user (если получили ошибку вывести сообщение пользователю)
                         if (exception.getPasswordMessages().length != 0) {                          //password exception (ошибка в пароле)

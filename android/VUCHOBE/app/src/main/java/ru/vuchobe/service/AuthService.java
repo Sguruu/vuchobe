@@ -14,6 +14,7 @@ import ru.vuchobe.model.Authorization;
 import ru.vuchobe.model.AuthorizationToken;
 import ru.vuchobe.model.Registration;
 import ru.vuchobe.util.threadUtil.ThreadService;
+import ru.vuchobe.util.threadUtil.ThreadTask;
 
 public final class AuthService {
     public static final String name = "Сервиз авторизации";
@@ -48,7 +49,7 @@ public final class AuthService {
             passwordErr.add(passwordIsEmptyMsg);
         }
         if (!loginErr.isEmpty() || !passwordErr.isEmpty() || !otherErr.isEmpty()) {
-            ThreadService.get().asyncMain(() ->
+            ThreadService.get().asyncMain((ThreadTask taskMain) ->
                     resultFunc.run(false, new AuthException(loginErr, passwordErr, otherErr))
             );
             return;
@@ -63,7 +64,7 @@ public final class AuthService {
                 Authorization.class,
                 new Authorization(login, password),
                 AuthorizationToken.class,
-                (body, error) -> ThreadService.get().asyncMain(() -> {
+                (body, error) -> ThreadService.get().asyncMain((ThreadTask taskMain) -> {
                     if (error != null) {
                         resultFunc.run(false, new AuthException(null, null, new String[]{error.getMessage()}));
                         return;
@@ -158,7 +159,7 @@ public final class AuthService {
         }
 
         if (!errorMsgs.isEmpty()) {
-            ThreadService.get().asyncMain(() ->
+            ThreadService.get().asyncMain((ThreadTask taskMain) ->
                     resultFunc.run(false, new RegException(errorMsgs))
             );
             return;
@@ -171,7 +172,7 @@ public final class AuthService {
                 Registration.class,
                 new Registration(name, email, password),
                 Integer.class,
-                (body, error) -> ThreadService.get().asyncMain(() -> {
+                (body, error) -> ThreadService.get().asyncMain((ThreadTask taskMain) -> {
                     if (error != null) {
                         resultFunc.run(false, new RegException(error));
                         return;

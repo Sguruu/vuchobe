@@ -51,37 +51,37 @@ public abstract class ThreadAppCompatActivity extends AppCompatActivity implemen
 
     @Override
     public @NonNull
-    ThreadTask asyncIOGlobal(ThreadService.Unique unique, int uniqueNum, int timeStart, int timeReplay, int count, @NonNull ThreadTask task) {
+    ThreadTask asyncIOGlobal(ThreadService.Unique unique, int uniqueNum, int timeStart, int timeReplay, int count, @NonNull IThreadTask task) {
         return this.looperGlobal.asyncIOGlobal(unique, uniqueNum, timeStart, timeReplay, count, task);
     }
 
     @Override
     public @NonNull
-    ThreadTask asyncMainGlobal(ThreadService.Unique unique, int uniqueNum, int timeStart, int timeReplay, int count, @NonNull ThreadTask task) {
+    ThreadTask asyncMainGlobal(ThreadService.Unique unique, int uniqueNum, int timeStart, int timeReplay, int count, @NonNull IThreadTask task) {
         return this.looperGlobal.asyncMainGlobal(unique, uniqueNum, timeStart, timeReplay, count, task);
     }
 
     @Override
     public @NonNull
-    ThreadTask asyncNetworkGlobal(ThreadService.Unique unique, int uniqueNum, int timeStart, int timeReplay, int count, @NonNull ThreadTask task) {
+    ThreadTask asyncNetworkGlobal(ThreadService.Unique unique, int uniqueNum, int timeStart, int timeReplay, int count, @NonNull IThreadTask task) {
         return this.looperGlobal.asyncNetworkGlobal(unique, uniqueNum, timeStart, timeReplay, count, task);
     }
 
     @Override
     public @NonNull
-    ThreadTask asyncMainLocal(ThreadService.Unique unique, int uniqueNum, int timeStart, int timeReplay, int count, @NonNull ThreadTask task) {
+    ThreadTask asyncMainLocal(ThreadService.Unique unique, int uniqueNum, int timeStart, int timeReplay, int count, @NonNull IThreadTask task) {
         return this.looperLocal.asyncMainLocal(unique, uniqueNum, timeStart, timeReplay, count, task);
     }
 
     @Override
     public @NonNull
-    ThreadTask asyncIOLocal(ThreadService.Unique unique, int uniqueNum, int timeStart, int timeReplay, int count, @NonNull ThreadTask task) {
+    ThreadTask asyncIOLocal(ThreadService.Unique unique, int uniqueNum, int timeStart, int timeReplay, int count, @NonNull IThreadTask task) {
         return this.looperLocal.asyncIOLocal(unique, uniqueNum, timeStart, timeReplay, count, task);
     }
 
     @Override
     public @NonNull
-    ThreadTask asyncNetworkLocal(ThreadService.Unique unique, int uniqueNum, int timeStart, int timeReplay, int count, @NonNull ThreadTask task) {
+    ThreadTask asyncNetworkLocal(ThreadService.Unique unique, int uniqueNum, int timeStart, int timeReplay, int count, @NonNull IThreadTask task) {
         return this.looperLocal.asyncNetworkLocal(unique, uniqueNum, timeStart, timeReplay, count, task);
     }
 

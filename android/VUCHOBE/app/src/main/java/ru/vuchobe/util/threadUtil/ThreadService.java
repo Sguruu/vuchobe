@@ -22,7 +22,7 @@ public class ThreadService {
 
     static final ThreadLooperGlobal asyncGlobal;
 
-    static final ThreadLocal<ThreadTaskImpl> threadLooperByThread = new ThreadLocal<>();
+    static final ThreadLocal<ThreadTask> threadTaskByThread = new ThreadLocal<>();
 
     static Context contextGlobal = null;
 
@@ -62,8 +62,8 @@ public class ThreadService {
     }
 
     public static @Nullable
-    ThreadTaskImpl get() {
-        ThreadTaskImpl result = threadLooperByThread.get();
+    ThreadTask get() {
+        ThreadTask result = threadTaskByThread.get();
         if (result == null) {
             throw new NullPointerException(" ThreadLooper == null");
         }

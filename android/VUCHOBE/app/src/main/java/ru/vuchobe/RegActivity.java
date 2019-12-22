@@ -13,6 +13,7 @@ import java.util.ArrayList;
 
 import androidx.annotation.NonNull;
 import ru.vuchobe.service.AuthService;
+import ru.vuchobe.util.threadUtil.IThreadTask;
 import ru.vuchobe.util.threadUtil.ThreadAppCompatActivity;
 import ru.vuchobe.util.threadUtil.ThreadTask;
 import ru.vuchobe.util.ui.OnClickDrawableTextView;
@@ -86,7 +87,7 @@ public class RegActivity extends ThreadAppCompatActivity {
         String repassword = repasswordEditText.getText().toString();
 
         lockButton(regButton);
-        ThreadTask threadTask = this.asyncNetwork(() ->
+        ThreadTask threadTask = this.asyncNetwork((ThreadTask task) ->
                 AuthService.registration(email, name, password, repassword,
                         (body, exception) -> {
 

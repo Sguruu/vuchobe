@@ -30,25 +30,25 @@ class ThreadLooperGlobalImpl implements ThreadLooperGlobal {
 
     @Override
     public @NonNull
-    ThreadTask asyncIOGlobal(ThreadService.Unique unique, int uniqueNum, int timeStart, int timeReplay, int count, @NonNull ThreadTask task) {
+    ThreadTask asyncIOGlobal(ThreadService.Unique unique, int uniqueNum, int timeStart, int timeReplay, int count, @NonNull IThreadTask task) {
         return this.asyncRun(unique, uniqueNum, timeStart, timeReplay, count, ThreadService.ioGlobal, this, task);
     }
 
     @Override
     public @NonNull
-    ThreadTask asyncMainGlobal(ThreadService.Unique unique, int uniqueNum, int timeStart, int timeReplay, int count, @NonNull ThreadTask task) {
+    ThreadTask asyncMainGlobal(ThreadService.Unique unique, int uniqueNum, int timeStart, int timeReplay, int count, @NonNull IThreadTask task) {
         return this.asyncRun(unique, uniqueNum, timeStart, timeReplay, count, ThreadService.mainGlobal, this, task);
     }
 
     @Override
     public @NonNull
-    ThreadTask asyncNetworkGlobal(ThreadService.Unique unique, int uniqueNum, int timeStart, int timeReplay, int count, @NonNull ThreadTask task) {
+    ThreadTask asyncNetworkGlobal(ThreadService.Unique unique, int uniqueNum, int timeStart, int timeReplay, int count, @NonNull IThreadTask task) {
         return this.asyncRun(unique, uniqueNum, timeStart, timeReplay, count, ThreadService.networkGlobal, this, task);
     }
 
     @Override
     public @NonNull
-    ThreadTask asyncMainLocal(ThreadService.Unique unique, int uniqueNum, int timeStart, int timeReplay, int count, @NonNull ThreadTask task) {
+    ThreadTask asyncMainLocal(ThreadService.Unique unique, int uniqueNum, int timeStart, int timeReplay, int count, @NonNull IThreadTask task) {
         ThreadLooperLocal local = this.local;
         if (local != null) {
             return local.asyncMainLocal(unique, uniqueNum, timeStart, timeReplay, count, task);
@@ -58,7 +58,7 @@ class ThreadLooperGlobalImpl implements ThreadLooperGlobal {
 
     @Override
     public @NonNull
-    ThreadTask asyncIOLocal(ThreadService.Unique unique, int uniqueNum, int timeStart, int timeReplay, int count, @NonNull ThreadTask task) {
+    ThreadTask asyncIOLocal(ThreadService.Unique unique, int uniqueNum, int timeStart, int timeReplay, int count, @NonNull IThreadTask task) {
         ThreadLooperLocal local = this.local;
         if (local != null) {
             return local.asyncIOLocal(unique, uniqueNum, timeStart, timeReplay, count, task);
@@ -68,7 +68,7 @@ class ThreadLooperGlobalImpl implements ThreadLooperGlobal {
 
     @Override
     public @NonNull
-    ThreadTask asyncNetworkLocal(ThreadService.Unique unique, int uniqueNum, int timeStart, int timeReplay, int count, @NonNull ThreadTask task) {
+    ThreadTask asyncNetworkLocal(ThreadService.Unique unique, int uniqueNum, int timeStart, int timeReplay, int count, @NonNull IThreadTask task) {
         ThreadLooperLocal local = this.local;
         if (local != null) {
             return local.asyncNetworkLocal(unique, uniqueNum, timeStart, timeReplay, count, task);

@@ -15,31 +15,31 @@ public interface ThreadLooper {
     void _deinit();
 
     @NonNull
-    ThreadTask asyncMainGlobal(ThreadService.Unique unique, int uniqueNum, int timeStart, int timeReplay, int count, @NonNull ThreadTask task);
+    ThreadTask asyncMainGlobal(ThreadService.Unique unique, int uniqueNum, int timeStart, int timeReplay, int count, @NonNull IThreadTask task);
 
     @NonNull
-    ThreadTask asyncIOGlobal(ThreadService.Unique unique, int uniqueNum, int timeStart, int timeReplay, int count, @NonNull ThreadTask task);
+    ThreadTask asyncIOGlobal(ThreadService.Unique unique, int uniqueNum, int timeStart, int timeReplay, int count, @NonNull IThreadTask task);
 
     @NonNull
-    ThreadTask asyncNetworkGlobal(ThreadService.Unique unique, int uniqueNum, int timeStart, int timeReplay, int count, @NonNull ThreadTask task);
+    ThreadTask asyncNetworkGlobal(ThreadService.Unique unique, int uniqueNum, int timeStart, int timeReplay, int count, @NonNull IThreadTask task);
 
     @NonNull
-    ThreadTask asyncMainLocal(ThreadService.Unique unique, int uniqueNum, int timeStart, int timeReplay, int count, @NonNull ThreadTask task);
+    ThreadTask asyncMainLocal(ThreadService.Unique unique, int uniqueNum, int timeStart, int timeReplay, int count, @NonNull IThreadTask task);
 
     @NonNull
-    ThreadTask asyncIOLocal(ThreadService.Unique unique, int uniqueNum, int timeStart, int timeReplay, int count, @NonNull ThreadTask task);
+    ThreadTask asyncIOLocal(ThreadService.Unique unique, int uniqueNum, int timeStart, int timeReplay, int count, @NonNull IThreadTask task);
 
     @NonNull
-    ThreadTask asyncNetworkLocal(ThreadService.Unique unique, int uniqueNum, int timeStart, int timeReplay, int count, @NonNull ThreadTask task);
+    ThreadTask asyncNetworkLocal(ThreadService.Unique unique, int uniqueNum, int timeStart, int timeReplay, int count, @NonNull IThreadTask task);
 
     @NonNull
-    ThreadTask asyncMain(ThreadService.Unique unique, int uniqueNum, int timeStart, int timeReplay, int count, @NonNull ThreadTask task);
+    ThreadTask asyncMain(ThreadService.Unique unique, int uniqueNum, int timeStart, int timeReplay, int count, @NonNull IThreadTask task);
 
     @NonNull
-    ThreadTask asyncIO(ThreadService.Unique unique, int uniqueNum, int timeStart, int timeReplay, int count, @NonNull ThreadTask task);
+    ThreadTask asyncIO(ThreadService.Unique unique, int uniqueNum, int timeStart, int timeReplay, int count, @NonNull IThreadTask task);
 
     @NonNull
-    ThreadTask asyncNetwork(ThreadService.Unique unique, int uniqueNum, int timeStart, int timeReplay, int count, @NonNull ThreadTask task);
+    ThreadTask asyncNetwork(ThreadService.Unique unique, int uniqueNum, int timeStart, int timeReplay, int count, @NonNull IThreadTask task);
 
     @Nullable
     Context getContext();
@@ -48,319 +48,319 @@ public interface ThreadLooper {
 
 
     default @NonNull
-    ThreadTask asyncIOGlobal(@NonNull ThreadTask task) {
+    ThreadTask asyncIOGlobal(@NonNull IThreadTask task) {
         return this.asyncIOGlobal(ThreadService.NONE, task);
     }
 
     default @NonNull
-    ThreadTask asyncIOGlobal(int timeStart, @NonNull ThreadTask task) {
+    ThreadTask asyncIOGlobal(int timeStart, @NonNull IThreadTask task) {
         return this.asyncIOGlobal(timeStart, ThreadService.NONE, task);
     }
 
     default @NonNull
-    ThreadTask asyncIOGlobal(int timeStart, int timeReplay, @NonNull ThreadTask task) {
+    ThreadTask asyncIOGlobal(int timeStart, int timeReplay, @NonNull IThreadTask task) {
         return this.asyncIOGlobal(timeStart, timeReplay, ThreadService.NONE, task);
     }
 
     default @NonNull
-    ThreadTask asyncIOGlobal(int timeStart, int timeReplay, int count, @NonNull ThreadTask task) {
+    ThreadTask asyncIOGlobal(int timeStart, int timeReplay, int count, @NonNull IThreadTask task) {
         return this.asyncIOGlobal(ThreadService.Unique.NONE, ThreadService.NONE, timeStart, timeReplay, count, task);
     }
 
     default @NonNull
-    ThreadTask asyncIOGlobal(ThreadService.Unique unique, int uniqueNum, @NonNull ThreadTask task) {
+    ThreadTask asyncIOGlobal(ThreadService.Unique unique, int uniqueNum, @NonNull IThreadTask task) {
         return this.asyncIOGlobal(unique, uniqueNum, ThreadService.NONE, task);
     }
 
     default @NonNull
-    ThreadTask asyncIOGlobal(ThreadService.Unique unique, int uniqueNum, int timeStart, @NonNull ThreadTask task) {
+    ThreadTask asyncIOGlobal(ThreadService.Unique unique, int uniqueNum, int timeStart, @NonNull IThreadTask task) {
         return this.asyncIOGlobal(unique, uniqueNum, timeStart, ThreadService.NONE, task);
     }
 
     default @NonNull
-    ThreadTask asyncIOGlobal(ThreadService.Unique unique, int uniqueNum, int timeStart, int timeReplay, @NonNull ThreadTask task) {
+    ThreadTask asyncIOGlobal(ThreadService.Unique unique, int uniqueNum, int timeStart, int timeReplay, @NonNull IThreadTask task) {
         return this.asyncIOGlobal(unique, uniqueNum, timeStart, timeReplay, ThreadService.NONE, task);
     }
 
     default @NonNull
-    ThreadTask asyncMainGlobal(@NonNull ThreadTask task) {
+    ThreadTask asyncMainGlobal(@NonNull IThreadTask task) {
         return this.asyncMainGlobal(ThreadService.NONE, task);
     }
 
     default @NonNull
-    ThreadTask asyncMainGlobal(int timeStart, @NonNull ThreadTask task) {
+    ThreadTask asyncMainGlobal(int timeStart, @NonNull IThreadTask task) {
         return this.asyncMainGlobal(timeStart, ThreadService.NONE, task);
     }
 
     default @NonNull
-    ThreadTask asyncMainGlobal(int timeStart, int timeReplay, @NonNull ThreadTask task) {
+    ThreadTask asyncMainGlobal(int timeStart, int timeReplay, @NonNull IThreadTask task) {
         return this.asyncMainGlobal(timeStart, timeReplay, ThreadService.NONE, task);
     }
 
     default @NonNull
-    ThreadTask asyncMainGlobal(int timeStart, int timeReplay, int count, @NonNull ThreadTask task) {
+    ThreadTask asyncMainGlobal(int timeStart, int timeReplay, int count, @NonNull IThreadTask task) {
         return this.asyncMainGlobal(ThreadService.Unique.NONE, ThreadService.NONE, timeStart, timeReplay, count, task);
     }
 
     default @NonNull
-    ThreadTask asyncMainGlobal(ThreadService.Unique unique, int uniqueNum, @NonNull ThreadTask task) {
+    ThreadTask asyncMainGlobal(ThreadService.Unique unique, int uniqueNum, @NonNull IThreadTask task) {
         return this.asyncMainGlobal(unique, uniqueNum, ThreadService.NONE, task);
     }
 
     default @NonNull
-    ThreadTask asyncMainGlobal(ThreadService.Unique unique, int uniqueNum, int timeStart, @NonNull ThreadTask task) {
+    ThreadTask asyncMainGlobal(ThreadService.Unique unique, int uniqueNum, int timeStart, @NonNull IThreadTask task) {
         return this.asyncMainGlobal(unique, uniqueNum, timeStart, ThreadService.NONE, task);
     }
 
     default @NonNull
-    ThreadTask asyncMainGlobal(ThreadService.Unique unique, int uniqueNum, int timeStart, int timeReplay, @NonNull ThreadTask task) {
+    ThreadTask asyncMainGlobal(ThreadService.Unique unique, int uniqueNum, int timeStart, int timeReplay, @NonNull IThreadTask task) {
         return this.asyncMainGlobal(unique, uniqueNum, timeStart, timeReplay, ThreadService.NONE, task);
     }
 
     default @NonNull
-    ThreadTask asyncNetworkGlobal(@NonNull ThreadTask task) {
+    ThreadTask asyncNetworkGlobal(@NonNull IThreadTask task) {
         return this.asyncNetworkGlobal(ThreadService.NONE, task);
     }
 
     default @NonNull
-    ThreadTask asyncNetworkGlobal(int timeStart, @NonNull ThreadTask task) {
+    ThreadTask asyncNetworkGlobal(int timeStart, @NonNull IThreadTask task) {
         return this.asyncNetworkGlobal(timeStart, ThreadService.NONE, task);
     }
 
     default @NonNull
-    ThreadTask asyncNetworkGlobal(int timeStart, int timeReplay, @NonNull ThreadTask task) {
+    ThreadTask asyncNetworkGlobal(int timeStart, int timeReplay, @NonNull IThreadTask task) {
         return this.asyncNetworkGlobal(timeStart, timeReplay, ThreadService.NONE, task);
     }
 
     default @NonNull
-    ThreadTask asyncNetworkGlobal(int timeStart, int timeReplay, int count, @NonNull ThreadTask task) {
+    ThreadTask asyncNetworkGlobal(int timeStart, int timeReplay, int count, @NonNull IThreadTask task) {
         return this.asyncNetworkGlobal(ThreadService.Unique.NONE, ThreadService.NONE, timeStart, timeReplay, count, task);
     }
 
     default @NonNull
-    ThreadTask asyncNetworkGlobal(ThreadService.Unique unique, int uniqueNum, @NonNull ThreadTask task) {
+    ThreadTask asyncNetworkGlobal(ThreadService.Unique unique, int uniqueNum, @NonNull IThreadTask task) {
         return this.asyncNetworkGlobal(unique, uniqueNum, ThreadService.NONE, task);
     }
 
     default @NonNull
-    ThreadTask asyncNetworkGlobal(ThreadService.Unique unique, int uniqueNum, int timeStart, @NonNull ThreadTask task) {
+    ThreadTask asyncNetworkGlobal(ThreadService.Unique unique, int uniqueNum, int timeStart, @NonNull IThreadTask task) {
         return this.asyncNetworkGlobal(unique, uniqueNum, timeStart, ThreadService.NONE, task);
     }
 
     default @NonNull
-    ThreadTask asyncNetworkGlobal(ThreadService.Unique unique, int uniqueNum, int timeStart, int timeReplay, @NonNull ThreadTask task) {
+    ThreadTask asyncNetworkGlobal(ThreadService.Unique unique, int uniqueNum, int timeStart, int timeReplay, @NonNull IThreadTask task) {
         return this.asyncNetworkGlobal(unique, uniqueNum, timeStart, timeReplay, ThreadService.NONE, task);
     }
 
 
     default @NonNull
-    ThreadTask asyncMainLocal(@NonNull ThreadTask task) {
+    ThreadTask asyncMainLocal(@NonNull IThreadTask task) {
         return this.asyncMainLocal(ThreadService.NONE, task);
     }
 
     default @NonNull
-    ThreadTask asyncMainLocal(int timeStart, @NonNull ThreadTask task) {
+    ThreadTask asyncMainLocal(int timeStart, @NonNull IThreadTask task) {
         return this.asyncMainLocal(timeStart, ThreadService.NONE, task);
     }
 
     default @NonNull
-    ThreadTask asyncMainLocal(int timeStart, int timeReplay, @NonNull ThreadTask task) {
+    ThreadTask asyncMainLocal(int timeStart, int timeReplay, @NonNull IThreadTask task) {
         return this.asyncMainLocal(timeStart, timeReplay, ThreadService.NONE, task);
     }
 
     default @NonNull
-    ThreadTask asyncMainLocal(int timeStart, int timeReplay, int count, @NonNull ThreadTask task) {
+    ThreadTask asyncMainLocal(int timeStart, int timeReplay, int count, @NonNull IThreadTask task) {
         return this.asyncMainLocal(ThreadService.Unique.NONE, ThreadService.NONE, timeStart, timeReplay, count, task);
     }
 
     default @NonNull
-    ThreadTask asyncMainLocal(ThreadService.Unique unique, int uniqueNum, @NonNull ThreadTask task) {
+    ThreadTask asyncMainLocal(ThreadService.Unique unique, int uniqueNum, @NonNull IThreadTask task) {
         return this.asyncMainLocal(unique, uniqueNum, ThreadService.NONE, task);
     }
 
     default @NonNull
-    ThreadTask asyncMainLocal(ThreadService.Unique unique, int uniqueNum, int timeStart, @NonNull ThreadTask task) {
+    ThreadTask asyncMainLocal(ThreadService.Unique unique, int uniqueNum, int timeStart, @NonNull IThreadTask task) {
         return this.asyncMainLocal(unique, uniqueNum, timeStart, ThreadService.NONE, task);
     }
 
     default @NonNull
-    ThreadTask asyncMainLocal(ThreadService.Unique unique, int uniqueNum, int timeStart, int timeReplay, @NonNull ThreadTask task) {
+    ThreadTask asyncMainLocal(ThreadService.Unique unique, int uniqueNum, int timeStart, int timeReplay, @NonNull IThreadTask task) {
         return this.asyncMainLocal(unique, uniqueNum, timeStart, timeReplay, ThreadService.NONE, task);
     }
 
     default @NonNull
-    ThreadTask asyncIOLocal(@NonNull ThreadTask task) {
+    ThreadTask asyncIOLocal(@NonNull IThreadTask task) {
         return this.asyncIOLocal(ThreadService.NONE, task);
     }
 
     default @NonNull
-    ThreadTask asyncIOLocal(int timeStart, @NonNull ThreadTask task) {
+    ThreadTask asyncIOLocal(int timeStart, @NonNull IThreadTask task) {
         return this.asyncIOLocal(timeStart, ThreadService.NONE, task);
     }
 
     default @NonNull
-    ThreadTask asyncIOLocal(int timeStart, int timeReplay, @NonNull ThreadTask task) {
+    ThreadTask asyncIOLocal(int timeStart, int timeReplay, @NonNull IThreadTask task) {
         return this.asyncIOLocal(timeStart, timeReplay, ThreadService.NONE, task);
     }
 
     default @NonNull
-    ThreadTask asyncIOLocal(int timeStart, int timeReplay, int count, @NonNull ThreadTask task) {
+    ThreadTask asyncIOLocal(int timeStart, int timeReplay, int count, @NonNull IThreadTask task) {
         return this.asyncIOLocal(ThreadService.Unique.NONE, ThreadService.NONE, timeStart, timeReplay, count, task);
     }
 
     default @NonNull
-    ThreadTask asyncIOLocal(ThreadService.Unique unique, int uniqueNum, @NonNull ThreadTask task) {
+    ThreadTask asyncIOLocal(ThreadService.Unique unique, int uniqueNum, @NonNull IThreadTask task) {
         return this.asyncIOLocal(unique, uniqueNum, ThreadService.NONE, task);
     }
 
     default @NonNull
-    ThreadTask asyncIOLocal(ThreadService.Unique unique, int uniqueNum, int timeStart, @NonNull ThreadTask task) {
+    ThreadTask asyncIOLocal(ThreadService.Unique unique, int uniqueNum, int timeStart, @NonNull IThreadTask task) {
         return this.asyncIOLocal(unique, uniqueNum, timeStart, ThreadService.NONE, task);
     }
 
     default @NonNull
-    ThreadTask asyncIOLocal(ThreadService.Unique unique, int uniqueNum, int timeStart, int timeReplay, @NonNull ThreadTask task) {
+    ThreadTask asyncIOLocal(ThreadService.Unique unique, int uniqueNum, int timeStart, int timeReplay, @NonNull IThreadTask task) {
         return this.asyncIOLocal(unique, uniqueNum, timeStart, timeReplay, ThreadService.NONE, task);
     }
 
     default @NonNull
-    ThreadTask asyncNetworkLocal(@NonNull ThreadTask task) {
+    ThreadTask asyncNetworkLocal(@NonNull IThreadTask task) {
         return this.asyncNetworkLocal(ThreadService.NONE, task);
     }
 
     default @NonNull
-    ThreadTask asyncNetworkLocal(int timeStart, @NonNull ThreadTask task) {
+    ThreadTask asyncNetworkLocal(int timeStart, @NonNull IThreadTask task) {
         return this.asyncNetworkLocal(timeStart, ThreadService.NONE, task);
     }
 
     default @NonNull
-    ThreadTask asyncNetworkLocal(int timeStart, int timeReplay, @NonNull ThreadTask task) {
+    ThreadTask asyncNetworkLocal(int timeStart, int timeReplay, @NonNull IThreadTask task) {
         return this.asyncNetworkLocal(timeStart, timeReplay, ThreadService.NONE, task);
     }
 
     default @NonNull
-    ThreadTask asyncNetworkLocal(int timeStart, int timeReplay, int count, @NonNull ThreadTask task) {
+    ThreadTask asyncNetworkLocal(int timeStart, int timeReplay, int count, @NonNull IThreadTask task) {
         return this.asyncNetworkLocal(ThreadService.Unique.NONE, ThreadService.NONE, timeStart, timeReplay, count, task);
     }
 
     default @NonNull
-    ThreadTask asyncNetworkLocal(ThreadService.Unique unique, int uniqueNum, @NonNull ThreadTask task) {
+    ThreadTask asyncNetworkLocal(ThreadService.Unique unique, int uniqueNum, @NonNull IThreadTask task) {
         return this.asyncNetworkLocal(unique, uniqueNum, ThreadService.NONE, task);
     }
 
     default @NonNull
-    ThreadTask asyncNetworkLocal(ThreadService.Unique unique, int uniqueNum, int timeStart, @NonNull ThreadTask task) {
+    ThreadTask asyncNetworkLocal(ThreadService.Unique unique, int uniqueNum, int timeStart, @NonNull IThreadTask task) {
         return this.asyncNetworkLocal(unique, uniqueNum, timeStart, ThreadService.NONE, task);
     }
 
     default @NonNull
-    ThreadTask asyncNetworkLocal(ThreadService.Unique unique, int uniqueNum, int timeStart, int timeReplay, @NonNull ThreadTask task) {
+    ThreadTask asyncNetworkLocal(ThreadService.Unique unique, int uniqueNum, int timeStart, int timeReplay, @NonNull IThreadTask task) {
         return this.asyncNetworkLocal(unique, uniqueNum, timeStart, timeReplay, ThreadService.NONE, task);
     }
 
 
     default @NonNull
-    ThreadTask asyncMain(@NonNull ThreadTask task) {
+    ThreadTask asyncMain(@NonNull IThreadTask task) {
         return this.asyncMain(ThreadService.NONE, task);
     }
 
     default @NonNull
-    ThreadTask asyncMain(int timeStart, @NonNull ThreadTask task) {
+    ThreadTask asyncMain(int timeStart, @NonNull IThreadTask task) {
         return this.asyncMain(timeStart, ThreadService.NONE, task);
     }
 
     default @NonNull
-    ThreadTask asyncMain(int timeStart, int timeReplay, @NonNull ThreadTask task) {
+    ThreadTask asyncMain(int timeStart, int timeReplay, @NonNull IThreadTask task) {
         return this.asyncMain(timeStart, timeReplay, ThreadService.NONE, task);
     }
 
     default @NonNull
-    ThreadTask asyncMain(int timeStart, int timeReplay, int count, @NonNull ThreadTask task) {
+    ThreadTask asyncMain(int timeStart, int timeReplay, int count, @NonNull IThreadTask task) {
         return this.asyncMain(ThreadService.Unique.NONE, ThreadService.NONE, timeStart, timeReplay, count, task);
     }
 
     default @NonNull
-    ThreadTask asyncMain(ThreadService.Unique unique, int uniqueNum, @NonNull ThreadTask task) {
+    ThreadTask asyncMain(ThreadService.Unique unique, int uniqueNum, @NonNull IThreadTask task) {
         return this.asyncMain(unique, uniqueNum, ThreadService.NONE, task);
     }
 
     default @NonNull
-    ThreadTask asyncMain(ThreadService.Unique unique, int uniqueNum, int timeStart, @NonNull ThreadTask task) {
+    ThreadTask asyncMain(ThreadService.Unique unique, int uniqueNum, int timeStart, @NonNull IThreadTask task) {
         return this.asyncMain(unique, uniqueNum, timeStart, ThreadService.NONE, task);
     }
 
     default @NonNull
-    ThreadTask asyncMain(ThreadService.Unique unique, int uniqueNum, int timeStart, int timeReplay, @NonNull ThreadTask task) {
+    ThreadTask asyncMain(ThreadService.Unique unique, int uniqueNum, int timeStart, int timeReplay, @NonNull IThreadTask task) {
         return this.asyncMain(unique, uniqueNum, timeStart, timeReplay, ThreadService.NONE, task);
     }
 
     default @NonNull
-    ThreadTask asyncIO(@NonNull ThreadTask task) {
+    ThreadTask asyncIO(@NonNull IThreadTask task) {
         return this.asyncIO(ThreadService.NONE, task);
     }
 
     default @NonNull
-    ThreadTask asyncIO(int timeStart, @NonNull ThreadTask task) {
+    ThreadTask asyncIO(int timeStart, @NonNull IThreadTask task) {
         return this.asyncIO(timeStart, ThreadService.NONE, task);
     }
 
     default @NonNull
-    ThreadTask asyncIO(int timeStart, int timeReplay, @NonNull ThreadTask task) {
+    ThreadTask asyncIO(int timeStart, int timeReplay, @NonNull IThreadTask task) {
         return this.asyncIO(timeStart, timeReplay, ThreadService.NONE, task);
     }
 
     default @NonNull
-    ThreadTask asyncIO(int timeStart, int timeReplay, int count, @NonNull ThreadTask task) {
+    ThreadTask asyncIO(int timeStart, int timeReplay, int count, @NonNull IThreadTask task) {
         return this.asyncIO(ThreadService.Unique.NONE, ThreadService.NONE, timeStart, timeReplay, count, task);
     }
 
     default @NonNull
-    ThreadTask asyncIO(ThreadService.Unique unique, int uniqueNum, @NonNull ThreadTask task) {
+    ThreadTask asyncIO(ThreadService.Unique unique, int uniqueNum, @NonNull IThreadTask task) {
         return this.asyncIO(unique, uniqueNum, ThreadService.NONE, task);
     }
 
     default @NonNull
-    ThreadTask asyncIO(ThreadService.Unique unique, int uniqueNum, int timeStart, @NonNull ThreadTask task) {
+    ThreadTask asyncIO(ThreadService.Unique unique, int uniqueNum, int timeStart, @NonNull IThreadTask task) {
         return this.asyncIO(unique, uniqueNum, timeStart, ThreadService.NONE, task);
     }
 
     default @NonNull
-    ThreadTask asyncIO(ThreadService.Unique unique, int uniqueNum, int timeStart, int timeReplay, @NonNull ThreadTask task) {
+    ThreadTask asyncIO(ThreadService.Unique unique, int uniqueNum, int timeStart, int timeReplay, @NonNull IThreadTask task) {
         return this.asyncIO(unique, uniqueNum, timeStart, timeReplay, ThreadService.NONE, task);
     }
 
     default @NonNull
-    ThreadTask asyncNetwork(@NonNull ThreadTask task) {
+    ThreadTask asyncNetwork(@NonNull IThreadTask task) {
         return this.asyncNetwork(ThreadService.NONE, task);
     }
 
     default @NonNull
-    ThreadTask asyncNetwork(int timeStart, @NonNull ThreadTask task) {
+    ThreadTask asyncNetwork(int timeStart, @NonNull IThreadTask task) {
         return this.asyncNetwork(timeStart, ThreadService.NONE, task);
     }
 
     default @NonNull
-    ThreadTask asyncNetwork(int timeStart, int timeReplay, @NonNull ThreadTask task) {
+    ThreadTask asyncNetwork(int timeStart, int timeReplay, @NonNull IThreadTask task) {
         return this.asyncNetwork(timeStart, timeReplay, ThreadService.NONE, task);
     }
 
     default @NonNull
-    ThreadTask asyncNetwork(int timeStart, int timeReplay, int count, @NonNull ThreadTask task) {
+    ThreadTask asyncNetwork(int timeStart, int timeReplay, int count, @NonNull IThreadTask task) {
         return this.asyncNetwork(ThreadService.Unique.NONE, ThreadService.NONE, timeStart, timeReplay, count, task);
     }
 
     default @NonNull
-    ThreadTask asyncNetwork(ThreadService.Unique unique, int uniqueNum, @NonNull ThreadTask task) {
+    ThreadTask asyncNetwork(ThreadService.Unique unique, int uniqueNum, @NonNull IThreadTask task) {
         return this.asyncNetwork(unique, uniqueNum, ThreadService.NONE, task);
     }
 
     default @NonNull
-    ThreadTask asyncNetwork(ThreadService.Unique unique, int uniqueNum, int timeStart, @NonNull ThreadTask task) {
+    ThreadTask asyncNetwork(ThreadService.Unique unique, int uniqueNum, int timeStart, @NonNull IThreadTask task) {
         return this.asyncNetwork(unique, uniqueNum, timeStart, ThreadService.NONE, task);
     }
 
     default @NonNull
-    ThreadTask asyncNetwork(ThreadService.Unique unique, int uniqueNum, int timeStart, int timeReplay, @NonNull ThreadTask task) {
+    ThreadTask asyncNetwork(ThreadService.Unique unique, int uniqueNum, int timeStart, int timeReplay, @NonNull IThreadTask task) {
         return this.asyncNetwork(unique, uniqueNum, timeStart, timeReplay, ThreadService.NONE, task);
     }
 
@@ -372,9 +372,9 @@ public interface ThreadLooper {
             int count,
             @NonNull Handler handle,
             @Nullable ThreadLooper threadLooper,
-            @NonNull ThreadTask task
+            @NonNull IThreadTask task
     ) {
-        ThreadTaskImpl taskReal = new ThreadTaskImpl();
+        ThreadTask taskReal = new ThreadTask();
         taskReal.task = task;
         /*if(task.status != ThreadService.Status.NONE){
             throw new IllegalArgumentException("task.status != Status.NONE");
