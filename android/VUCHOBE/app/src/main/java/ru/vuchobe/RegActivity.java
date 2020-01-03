@@ -13,7 +13,6 @@ import java.util.ArrayList;
 
 import androidx.annotation.NonNull;
 import ru.vuchobe.service.AuthService;
-import ru.vuchobe.util.threadUtil.IThreadTask;
 import ru.vuchobe.util.threadUtil.ThreadAppCompatActivity;
 import ru.vuchobe.util.threadUtil.ThreadTask;
 import ru.vuchobe.util.ui.OnClickDrawableTextView;
