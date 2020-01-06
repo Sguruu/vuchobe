@@ -1,5 +1,7 @@
 package ru.vuchobe.util.threadUtil;
 
+import java.lang.ref.WeakReference;
+
 import androidx.annotation.NonNull;
 import androidx.annotation.Nullable;
 
@@ -9,14 +11,14 @@ import androidx.annotation.Nullable;
 class ThreadLooperGlobalImpl implements ThreadLooperGlobal {
 
     private @Nullable
-    ThreadLooperLocal local;
+    WeakReference<ThreadLooperLocal> local;
 
     public ThreadLooperGlobalImpl() {
         this(null);
     }
 
     public ThreadLooperGlobalImpl(@Nullable ThreadLooperLocal local) {
-        this.local = local;
+        this.local = new WeakReference<>(local);
     }
 
     @Override
@@ -25,7 +27,7 @@ class ThreadLooperGlobalImpl implements ThreadLooperGlobal {
 
     @Override
     public void _deinit() {
-        local = null;
+        local = new WeakReference<>(null);
     }
 
     @Override
@@ -49,7 +51,7 @@ class ThreadLooperGlobalImpl implements ThreadLooperGlobal {
     @Override
     public @NonNull
     ThreadTask asyncMainLocal(ThreadService.Unique unique, int uniqueNum, int timeStart, int timeReplay, int count, @NonNull IThreadTask task) {
-        ThreadLooperLocal local = this.local;
+        ThreadLooperLocal local = this.local.get();
         if (local != null) {
             return local.asyncMainLocal(unique, uniqueNum, timeStart, timeReplay, count, task);
         }
@@ -59,7 +61,7 @@ class ThreadLooperGlobalImpl implements ThreadLooperGlobal {
     @Override
     public @NonNull
     ThreadTask asyncIOLocal(ThreadService.Unique unique, int uniqueNum, int timeStart, int timeReplay, int count, @NonNull IThreadTask task) {
-        ThreadLooperLocal local = this.local;
+        ThreadLooperLocal local = this.local.get();
         if (local != null) {
             return local.asyncIOLocal(unique, uniqueNum, timeStart, timeReplay, count, task);
         }
@@ -69,7 +71,7 @@ class ThreadLooperGlobalImpl implements ThreadLooperGlobal {
     @Override
     public @NonNull
     ThreadTask asyncNetworkLocal(ThreadService.Unique unique, int uniqueNum, int timeStart, int timeReplay, int count, @NonNull IThreadTask task) {
-        ThreadLooperLocal local = this.local;
+        ThreadLooperLocal local = this.local.get();
         if (local != null) {
             return local.asyncNetworkLocal(unique, uniqueNum, timeStart, timeReplay, count, task);
         }

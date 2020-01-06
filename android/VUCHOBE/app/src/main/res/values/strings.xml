@@ -27,4 +27,7 @@
     <string name="main_menu_bottom_university">Университет</string>
     <string name="main_menu_bottom_time_table">Расписание</string>
     <string name="main_menu_bottom_setting">Настройки</string>
+    <string name="title_university" />
+    <string name="title_timetable" />
+    <string name="title_setting" />
 </resources>

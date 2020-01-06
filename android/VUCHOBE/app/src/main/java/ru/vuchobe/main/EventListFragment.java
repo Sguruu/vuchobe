@@ -17,8 +17,7 @@ import java.util.Arrays;
 import java.util.Collections;
 import java.util.List;
 import java.util.Map;
-
-import javax.net.ssl.HttpsURLConnection;
+import java.util.Objects;
 
 import androidx.annotation.NonNull;
 import androidx.annotation.Nullable;
@@ -32,13 +31,14 @@ import ru.vuchobe.model.EventValue;
 import ru.vuchobe.model.ResponsePageBody;
 import ru.vuchobe.service.NetworkManager;
 import ru.vuchobe.util.NetworkUtils;
-import ru.vuchobe.util.loaders.ByteArraySaveResult;
+import ru.vuchobe.util.loaders.ByteArraySaveObjectResult;
 import ru.vuchobe.util.loaders.CallbackResult;
 import ru.vuchobe.util.loaders.Loader;
 import ru.vuchobe.util.loaders.ObjectLoader;
 import ru.vuchobe.util.loaders.PageLoader;
 import ru.vuchobe.util.loaders.PageSaveResult;
 import ru.vuchobe.util.threadUtil.ThreadFragment;
+import ru.vuchobe.util.threadUtil.ThreadLooperLocal;
 import ru.vuchobe.util.threadUtil.ThreadService;
 import ru.vuchobe.util.threadUtil.ThreadTask;
 
@@ -77,7 +77,7 @@ public class EventListFragment extends ThreadFragment {
             LinearLayoutManager linearLayoutManager = new LinearLayoutManager(this.getContext(), LinearLayoutManager.VERTICAL, false);
             eventListRecyclerView.setLayoutManager(linearLayoutManager);
 
-            RecyclerView.Adapter adapter = getAdapterEventList();
+            RecyclerView.Adapter adapter = getAdapterEventList(this);
             eventListRecyclerView.setAdapter(adapter);
         }
     }
@@ -101,10 +101,12 @@ public class EventListFragment extends ThreadFragment {
         eventListRecyclerView = getView().findViewById(R.id.event_list_recycler_id);
     }
 
-    private RecyclerView.Adapter getAdapterEventList() {
+    private static RecyclerView.Adapter getAdapterEventList(EventListFragment fragment) {
         try {
+            ThreadLooperLocal local = fragment.getLooperLocal();
+
             ObjectLoader<Void, InputStream> imageLoader = new ObjectLoader<Void, InputStream>(
-                    this,
+                    local,
                     null,
                     600000
             ) {
@@ -143,16 +145,15 @@ public class EventListFragment extends ThreadFragment {
             };
 
 
-            ByteArraySaveResult<Void, Bitmap> imageSaveResult = new ByteArraySaveResult<Void, Bitmap>(
-                    this,
-                    EventValue.class.getMethod("getImages"),
-                    EventValue.class.getMethod("setImagesResources", Map.class),
+            ByteArraySaveObjectResult<Void, Bitmap> imageSaveResult = new ByteArraySaveObjectResult<Void, Bitmap>(
+                    local,
+                    EventValue.class.getMethod("getImage"),
+                    EventValue.class.getMethod("setImageResource", Bitmap.class),
                     imageLoader,
                     null,
                     600000,//load imageLoader
-                    50
+                    20
             ){
-
                 @Override
                 public Bitmap convert(byte[] bytes) {
                     if(bytes != null){
@@ -169,7 +170,7 @@ public class EventListFragment extends ThreadFragment {
             };
 
             PageLoader<ResponsePageBody<EventValue>, EventValue> pageLoader = new PageLoader<ResponsePageBody<EventValue>, EventValue>(
-                    this,
+                    local,
                     10,
                     null,
                     60000
@@ -199,7 +200,7 @@ public class EventListFragment extends ThreadFragment {
             EventAdapter adapter = new EventAdapter();
 
             final PageSaveResult<ResponsePageBody<EventValue>, EventValue> pageSaveResult = new PageSaveResult<ResponsePageBody<EventValue>, EventValue>(
-                    this,
+                    local,
                     10,
                     null,
                     null,
@@ -225,7 +226,7 @@ public class EventListFragment extends ThreadFragment {
                     long timeNow = System.currentTimeMillis();
                     if(updateTime > timeNow){
                         countUpdateRollback ++;
-                        asyncMain(
+                        local.asyncMain(
                                 ThreadService.Unique.NEW,
                                 uniqueNum,
                                 (int) (updateTime - timeNow + 100),
@@ -278,17 +279,26 @@ public class EventListFragment extends ThreadFragment {
         public void onBindViewHolder(@NonNull EventViewHolder holder, int position) {
             EventValue value = (pageSaveResult != null)? pageSaveResult.getValue(position) : null;
             //setDefaultValue
-            holder.eventImageView.setImageResource(R.drawable.ic_event_element_def);
-            holder.eventTitleTextView.setText(R.string.Loading);
-            holder.eventDescriptionTextView.setText(R.string.Loading);
-            if(value == null) return;
+            if(value == null){
+                holder.eventImageView.setTag(null);
+                holder.eventImageView.setImageResource(R.drawable.ic_event_element_def);
+                holder.eventTitleTextView.setText(R.string.Loading);
+                holder.eventDescriptionTextView.setText(R.string.Loading);
+                return;
+            }
 
             holder.eventTitleTextView.setText(value.getName());
             holder.eventDescriptionTextView.setText(value.getShortDescription());
-            if(value.getImagesResources() != null){
-                Bitmap image = value.getImagesResources().get(value.getImages().get(0));
-                if(image != null){
+
+            Long id = value.getImage();
+            Bitmap image = value.getImageResource();
+            if(!Objects.equals(id, holder.eventImageView.getTag())){
+                if (image != null) {
+                    holder.eventImageView.setTag(id);
                     holder.eventImageView.setImageBitmap(image);
+                }else{
+                    holder.eventImageView.setTag(null);
+                    holder.eventImageView.setImageResource(R.drawable.ic_event_element_def);
                 }
             }
         }

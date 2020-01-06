@@ -82,15 +82,16 @@ public class MainActivity extends AppCompatActivity {
         public Fragment createFragment(int position) {
             switch (position) {
                 case 0: return EventListFragment.newInstance();
-                case 1: return EventListFragment.newInstance();//TODO добавить свои
-                case 2: return EventListFragment.newInstance();//TODO добавить свои
+                case 1: return UniversityFragment.newInstance();
+                case 2: return TimetableFragment.newInstance();
+                case 3: return SettingFragment.newInstance();
             }
             return null;
         }
 
         @Override
         public int getItemCount() {
-            return 3;
+            return 4;
         }
     }
 }
