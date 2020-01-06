@@ -17,11 +17,11 @@ import java.util.Arrays;
 import java.util.Collections;
 import java.util.List;
 import java.util.Map;
-
-import javax.net.ssl.HttpsURLConnection;
+import java.util.Objects;
 
 import androidx.annotation.NonNull;
 import androidx.annotation.Nullable;
+import androidx.appcompat.widget.Toolbar;
 import androidx.coordinatorlayout.widget.CoordinatorLayout;
 import androidx.fragment.app.Fragment;
 import androidx.recyclerview.widget.LinearLayoutManager;
@@ -31,13 +31,14 @@ import ru.vuchobe.model.EventValue;
 import ru.vuchobe.model.ResponsePageBody;
 import ru.vuchobe.service.NetworkManager;
 import ru.vuchobe.util.NetworkUtils;
-import ru.vuchobe.util.loaders.ByteArraySaveResult;
+import ru.vuchobe.util.loaders.ByteArraySaveObjectResult;
 import ru.vuchobe.util.loaders.CallbackResult;
 import ru.vuchobe.util.loaders.Loader;
 import ru.vuchobe.util.loaders.ObjectLoader;
 import ru.vuchobe.util.loaders.PageLoader;
 import ru.vuchobe.util.loaders.PageSaveResult;
 import ru.vuchobe.util.threadUtil.ThreadFragment;
+import ru.vuchobe.util.threadUtil.ThreadLooperLocal;
 import ru.vuchobe.util.threadUtil.ThreadService;
 import ru.vuchobe.util.threadUtil.ThreadTask;
 
@@ -49,6 +50,7 @@ import ru.vuchobe.util.threadUtil.ThreadTask;
 public class EventListFragment extends ThreadFragment {
 
     private CoordinatorLayout main;
+    private Toolbar toolbar;
     private RecyclerView eventListRecyclerView;
 
     public EventListFragment() {
@@ -71,11 +73,13 @@ public class EventListFragment extends ThreadFragment {
 
         initUI();
 
-        LinearLayoutManager linearLayoutManager = new LinearLayoutManager(this.getContext(), LinearLayoutManager.VERTICAL, false);
-        eventListRecyclerView.setLayoutManager(linearLayoutManager);
+        if(eventListRecyclerView.getAdapter() == null) {
+            LinearLayoutManager linearLayoutManager = new LinearLayoutManager(this.getContext(), LinearLayoutManager.VERTICAL, false);
+            eventListRecyclerView.setLayoutManager(linearLayoutManager);
 
-        RecyclerView.Adapter adapter = getAdapterEventList();
-        eventListRecyclerView.setAdapter(adapter);
+            RecyclerView.Adapter adapter = getAdapterEventList(this);
+            eventListRecyclerView.setAdapter(adapter);
+        }
     }
 
     @Override
@@ -91,14 +95,18 @@ public class EventListFragment extends ThreadFragment {
      */
     private void initUI() {
         main = getView().findViewById(R.id.mainId);                                                 //Container all next UI elements (Контейнер всех следующих UI)
+        toolbar = getView().findViewById(R.id.toolbar);
+        //setSupportActionBar(toolbar);
 
         eventListRecyclerView = getView().findViewById(R.id.event_list_recycler_id);
     }
 
-    private RecyclerView.Adapter getAdapterEventList() {
+    private static RecyclerView.Adapter getAdapterEventList(EventListFragment fragment) {
         try {
+            ThreadLooperLocal local = fragment.getLooperLocal();
+
             ObjectLoader<Void, InputStream> imageLoader = new ObjectLoader<Void, InputStream>(
-                    this,
+                    local,
                     null,
                     600000
             ) {
@@ -137,16 +145,15 @@ public class EventListFragment extends ThreadFragment {
             };
 
 
-            ByteArraySaveResult<Void, Bitmap> imageSaveResult = new ByteArraySaveResult<Void, Bitmap>(
-                    this,
-                    EventValue.class.getMethod("getImages"),
-                    EventValue.class.getMethod("setImagesResources", Map.class),
+            ByteArraySaveObjectResult<Void, Bitmap> imageSaveResult = new ByteArraySaveObjectResult<Void, Bitmap>(
+                    local,
+                    EventValue.class.getMethod("getImage"),
+                    EventValue.class.getMethod("setImageResource", Bitmap.class),
                     imageLoader,
                     null,
                     600000,//load imageLoader
-                    50
+                    20
             ){
-
                 @Override
                 public Bitmap convert(byte[] bytes) {
                     if(bytes != null){
@@ -155,10 +162,15 @@ public class EventListFragment extends ThreadFragment {
                     }
                     return null;
                 }
+
+                @Override
+                public boolean isEquals(Bitmap a, Bitmap b) {
+                    return (a == b) || (a != null && a.sameAs(b));
+                }
             };
 
             PageLoader<ResponsePageBody<EventValue>, EventValue> pageLoader = new PageLoader<ResponsePageBody<EventValue>, EventValue>(
-                    this,
+                    local,
                     10,
                     null,
                     60000
@@ -188,7 +200,7 @@ public class EventListFragment extends ThreadFragment {
             EventAdapter adapter = new EventAdapter();
 
             final PageSaveResult<ResponsePageBody<EventValue>, EventValue> pageSaveResult = new PageSaveResult<ResponsePageBody<EventValue>, EventValue>(
-                    this,
+                    local,
                     10,
                     null,
                     null,
@@ -204,23 +216,23 @@ public class EventListFragment extends ThreadFragment {
                     return (responsePageBody != null) ? responsePageBody.getTotalElements() : 0;
                 }
 
-                private int countUpdateRollback = 0;
-                private long updateTime = 0;
+                private volatile int countUpdateRollback = 0;
+                private volatile long updateTime = 0;
                 private int uniqueNum = ThreadTask.getUniqueNumGen();
 
                 @Override
-                public void updateDataUI(@Nullable Loader loader, @Nullable Params params) {
-                    super.updateDataUI(loader, params);
+                public boolean updateDataUI(@Nullable Loader loader, @Nullable Params params) {
+                    if(!super.updateDataUI(loader, params)) return false;
                     long timeNow = System.currentTimeMillis();
                     if(updateTime > timeNow){
                         countUpdateRollback ++;
-                        asyncMain(
+                        local.asyncMain(
                                 ThreadService.Unique.NEW,
                                 uniqueNum,
-                                (int) (updateTime - timeNow + 10),
+                                (int) (updateTime - timeNow + 100),
                                 (ThreadTask task) -> updateDataUI(this, null)
                         );
-                        return;
+                        return true;
                     }
                     if(params != null && countUpdateRollback == 0) {
                         PageParams pageParams = this.assertPageParams(params);
@@ -229,7 +241,8 @@ public class EventListFragment extends ThreadFragment {
                         adapter.notifyDataSetChanged();
                     }
                     countUpdateRollback = 0;
-                    updateTime = timeNow + 100;
+                    updateTime = timeNow + 10000;
+                    return true;
                 }
             };
 
@@ -266,17 +279,26 @@ public class EventListFragment extends ThreadFragment {
         public void onBindViewHolder(@NonNull EventViewHolder holder, int position) {
             EventValue value = (pageSaveResult != null)? pageSaveResult.getValue(position) : null;
             //setDefaultValue
-            holder.eventImageView.setImageResource(android.R.drawable.ic_menu_view);
-            holder.eventTitleTextView.setText(R.string.Loading);
-            holder.eventDescriptionTextView.setText(R.string.Loading);
-            if(value == null) return;
+            if(value == null){
+                holder.eventImageView.setTag(null);
+                holder.eventImageView.setImageResource(R.drawable.ic_event_element_def);
+                holder.eventTitleTextView.setText(R.string.Loading);
+                holder.eventDescriptionTextView.setText(R.string.Loading);
+                return;
+            }
 
             holder.eventTitleTextView.setText(value.getName());
             holder.eventDescriptionTextView.setText(value.getShortDescription());
-            if(value.getImagesResources() != null){
-                Bitmap image = value.getImagesResources().get(value.getImages().get(0));
-                if(image != null){
+
+            Long id = value.getImage();
+            Bitmap image = value.getImageResource();
+            if(!Objects.equals(id, holder.eventImageView.getTag())){
+                if (image != null) {
+                    holder.eventImageView.setTag(id);
                     holder.eventImageView.setImageBitmap(image);
+                }else{
+                    holder.eventImageView.setTag(null);
+                    holder.eventImageView.setImageResource(R.drawable.ic_event_element_def);
                 }
             }
         }

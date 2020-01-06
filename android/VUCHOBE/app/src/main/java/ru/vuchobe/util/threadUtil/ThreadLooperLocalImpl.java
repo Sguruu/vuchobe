@@ -2,6 +2,8 @@ package ru.vuchobe.util.threadUtil;
 
 import android.content.Context;
 
+import java.lang.ref.WeakReference;
+
 import androidx.annotation.NonNull;
 import androidx.annotation.Nullable;
 
@@ -10,10 +12,10 @@ import androidx.annotation.Nullable;
  */
 class ThreadLooperLocalImpl implements ThreadLooperLocal {
     private @Nullable
-    ThreadLooperLocal local;
+    WeakReference<ThreadLooperLocal> local;
 
     public ThreadLooperLocalImpl(@NonNull ThreadLooperLocal local) {
-        this.local = local;
+        this.local = new WeakReference<>(local);
     }
 
     @Override
@@ -22,13 +24,13 @@ class ThreadLooperLocalImpl implements ThreadLooperLocal {
 
     @Override
     public void _deinit() {
-        local = null;
+        local = new WeakReference<>(null);
     }
 
     @Override
     public @NonNull
     ThreadTask asyncIOGlobal(ThreadService.Unique unique, int uniqueNum, int timeStart, int timeReplay, int count, @NonNull IThreadTask task) {
-        ThreadLooperLocal local = this.local;
+        ThreadLooperLocal local = this.local.get();
         if (local != null) {
             return local.asyncIOGlobal(unique, uniqueNum, timeStart, timeReplay, count, task);
         }
@@ -38,7 +40,7 @@ class ThreadLooperLocalImpl implements ThreadLooperLocal {
     @Override
     public @NonNull
     ThreadTask asyncMainGlobal(ThreadService.Unique unique, int uniqueNum, int timeStart, int timeReplay, int count, @NonNull IThreadTask task) {
-        ThreadLooperLocal local = this.local;
+        ThreadLooperLocal local = this.local.get();
         if (local != null) {
             return local.asyncMainGlobal(unique, uniqueNum, timeStart, timeReplay, count, task);
         }
@@ -48,7 +50,7 @@ class ThreadLooperLocalImpl implements ThreadLooperLocal {
     @Override
     public @NonNull
     ThreadTask asyncNetworkGlobal(ThreadService.Unique unique, int uniqueNum, int timeStart, int timeReplay, int count, @NonNull IThreadTask task) {
-        ThreadLooperLocal local = this.local;
+        ThreadLooperLocal local = this.local.get();
         if (local != null) {
             return local.asyncNetworkGlobal(unique, uniqueNum, timeStart, timeReplay, count, task);
         }
@@ -81,7 +83,7 @@ class ThreadLooperLocalImpl implements ThreadLooperLocal {
     @Override
     public @Nullable
     Context getContext() {
-        ThreadLooperLocal local = this.local;
+        ThreadLooperLocal local = this.local.get();
         return (local != null) ? local.getContext() : null;
     }
 }

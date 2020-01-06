@@ -28,18 +28,21 @@
                 android:layout_height="?attr/actionBarSize"
                 android:background="@color/colorBackgroundTitle"
                 app:popupTheme="@style/AppTheme.PopupOverlay"
-                app:title="@string/title_event_list" />
+                app:title="@string/title_setting" />
 
         </com.google.android.material.appbar.AppBarLayout>
 
-        <androidx.recyclerview.widget.RecyclerView
-            android:id="@+id/event_list_recycler_id"
+        <LinearLayout
+            android:id="@+id/setting_main_id"
             android:layout_width="match_parent"
             android:layout_height="match_parent"
             android:layout_below="@id/mainTopBarId"
             android:layout_alignParentStart="true"
             android:layout_alignParentEnd="true"
-            android:layout_alignParentBottom="true" />
+            android:layout_alignParentBottom="true"
+            android:orientation="horizontal">
+
+        </LinearLayout>
     </RelativeLayout>
 
 </FrameLayout>

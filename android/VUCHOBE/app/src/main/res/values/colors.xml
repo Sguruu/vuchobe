@@ -7,4 +7,5 @@
     <color name="colorMainText">#FFFFFF</color>
     <color name="colorMainButtonClick">#606060</color>
     <color name="colorBackgroundCart">#0096FF</color>
+    <color name="colorBackgroundTitle">#464646</color>
 </resources>
