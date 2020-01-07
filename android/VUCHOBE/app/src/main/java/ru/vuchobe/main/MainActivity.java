@@ -40,7 +40,7 @@ public class MainActivity extends AppCompatActivity {
                     switch (position){
                         case 1: selectId = R.id.main_menu_bottom_university; break;
                         case 2: selectId = R.id.main_menu_bottom_time_table; break;
-                        case 3: selectId = R.id.main_menu_bottom_setting; break;
+                        case 3: selectId = R.id.main_menu_bottom_profile; break;
                         case 0:
                         default: selectId = R.id.main_menu_bottom_events; break;
                     }
@@ -56,7 +56,7 @@ public class MainActivity extends AppCompatActivity {
                 case R.id.main_menu_bottom_events: position = 0; break;
                 case R.id.main_menu_bottom_university: position = 1; break;
                 case R.id.main_menu_bottom_time_table: position = 2; break;
-                case R.id.main_menu_bottom_setting: position = 3; break;
+                case R.id.main_menu_bottom_profile: position = 3; break;
             }
             if(position >= 0 && position < pages.getAdapter().getItemCount()){
                 pages.setCurrentItem(position);
@@ -84,7 +84,7 @@ public class MainActivity extends AppCompatActivity {
                 case 0: return EventListFragment.newInstance();
                 case 1: return UniversityFragment.newInstance();
                 case 2: return TimetableFragment.newInstance();
-                case 3: return SettingFragment.newInstance();
+                case 3: return ProfileFragment.newInstance();
             }
             return null;
         }
