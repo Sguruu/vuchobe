@@ -30,4 +30,12 @@
     <string name="title_university" />
     <string name="title_timetable" />
     <string name="title_setting" />
+    <string name="description_profile_photo">Фото</string>
+    <string name="title_profile" />
+    <string name="student">Студент</string>
+    <string name="email">Почта</string>
+    <string name="university">Университет</string>
+    <string name="faculty">Факультет</string>
+    <string name="group">Группа</string>
+    <string name="number_student">Номер студенческого</string>
 </resources>
