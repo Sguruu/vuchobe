@@ -1,0 +1,21 @@
+<?xml version="1.0" encoding="utf-8"?>
+<menu xmlns:android="http://schemas.android.com/apk/res/android">
+
+    <item
+        android:id="@+id/main_menu_bottom_events"
+        android:contentDescription="@string/main_menu_bottom_events"
+        android:icon="@drawable/ic_main_menu_event_list"
+        android:title="@string/main_menu_bottom_events" />
+    <item
+        android:id="@+id/main_menu_bottom_university"
+        android:icon="@drawable/ic_main_menu_home"
+        android:title="@string/main_menu_bottom_university" />
+    <item
+        android:id="@+id/main_menu_bottom_time_table"
+        android:icon="@drawable/ic_main_menu_time_table"
+        android:title="@string/main_menu_bottom_time_table" />
+    <item
+        android:id="@+id/main_menu_bottom_profile"
+        android:icon="@drawable/ic_main_menu_profile"
+        android:title="@string/main_menu_bottom_setting" />
+</menu>

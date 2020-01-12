@@ -53,6 +53,15 @@ public class UserAuthEntity implements UserDetails {
     @JoinColumn(name = "role_id")
     private Role role;
 
+    @ManyToMany
+    @JoinTable(
+            name = "user_to_activity",
+            joinColumns = @JoinColumn(name = "user_id"),
+            inverseJoinColumns = @JoinColumn(name = "activity_id")
+    )
+    @JsonIgnore
+    private Set<Activity> activities = new HashSet<>();
+
     public UserAuthEntity(@Email String email, String username, String password, Person man) {
         this.username = username;
         this.email = email;

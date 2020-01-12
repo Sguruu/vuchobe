@@ -24,6 +24,9 @@ spring:
     driver-class-name: org.postgresql.Driver
     username: admin
     password: 32AschyeS2463xzv
+  jpa:
+    hibernate:
+      ddl-auto: update
 #logging:
 #  level: 
 #    root: debug
@@ -38,3 +41,7 @@ spring:
     driver-class-name: org.postgresql.Driver
     username: admin
     password: 32AschyeS2463xzv
+  jpa:
+    hibernate:
+      ddl-auto: update
+  

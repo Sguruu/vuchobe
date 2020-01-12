@@ -36,24 +36,14 @@ public class FilterToken extends OncePerRequestFilter {
             throws ServletException, IOException {
         String header = request.getHeader(jwtConfig.getHeader());
 
-        // 1. validate the header and check the prefix
         if (header == null || !header.startsWith(jwtConfig.getPrefix())) {
             chain.doFilter(request, response);        // If not valid, go to the next filter.
             return;
         }
 
-        // If there is no token provided and hence the user won't be authenticated.
-        // It's Ok. Maybe the user accessing a public path or asking for a token.
-
-        // All secured paths that needs a token are already defined and secured in config class.
-        // And If user tried to access without access token, then he won't be authenticated and an exception will be thrown.
-
-        // 2. Get the token
         String token = header.replace(jwtConfig.getPrefix(), "");
 
-        try {    // exceptions might be thrown in creating the claims if for example the token is expired
-
-            // 3. Validate the token, use io.jsonwebtoken.jjwt
+        try {  
             Claims claims = Jwts.parser()
                     .setSigningKey(jwtConfig.getSecret().getBytes())
                     .parseClaimsJws(token)
@@ -85,6 +75,7 @@ public class FilterToken extends OncePerRequestFilter {
         } catch (Exception e) {
             // In case of failure. Make sure it's clear; so guarantee user won't be authenticated
             SecurityContextHolder.clearContext();
+            throw e;
         }
 
         // go to the next filter in the filter chain

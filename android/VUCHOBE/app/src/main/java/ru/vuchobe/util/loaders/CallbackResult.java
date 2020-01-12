@@ -1,0 +1,1 @@
+package ru.vuchobe.util.loaders;import java.util.List;public interface CallbackResult<ValueOne, Value>{    void callbackResult(            Loader.Params params,            ValueOne valueOne,            List<Value> values    );}

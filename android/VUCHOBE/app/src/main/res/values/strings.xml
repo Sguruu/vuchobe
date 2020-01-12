@@ -1,0 +1,41 @@
+<resources>
+    <string name="app_name">VUCHOBE</string>
+    <!-- main activity -->
+    <string name="title_window">VUCHOBE</string>
+    <string name="button_login">ВОЙТИ</string>
+    <string name="button_reg">РЕГИСТРАЦИЯ</string>
+    <string name="description_password_image">Введите пароль</string>
+    <string name="description_login_image">Введите логин</string>
+    <string name="description_login_input">ВВЕДИТЕ ПОЧТУ</string>
+    <string name="description_password_input">ВВЕДИТЕ ПАРОЛЬ</string>
+    <string name="button_forgot">ЗАБЫЛИ ПАРОЛЬ</string>
+    <string name="wait">ПОДОЖДИТЕ</string>
+    <string name="title_register">РЕГИСТРАЦИЯ</string>
+    <string name="description_name_input">ВВЕДИТЕ ИМЯ ПОЛЬЗОВАТЕЛЯ</string>
+    <string name="description_repassword_input">ВВЕДИТЕ ПАРОЛЬ</string>
+    <string name="text_political_registration">Я соглашаюсь с Правилами пользования и Политикой в сфере конфиденциальности и персональных данных и даю согласие на обработку своих персональных данных</string>
+    <string name="button_reg_accept">ПРИНЯТЬ</string>
+    <string name="button_cancel">ОТМЕНИТЬ</string>
+    <string name="title_activity_main">MainActivity</string>
+    <string name="action_settings">Settings</string>
+
+    <!-- TODO: Remove or change this placeholder text -->
+    <string name="hello_blank_fragment">Hello blank fragment</string>
+    <string name="Loading">Загрузка...</string>
+    <string name="title_event_list">Рекомендации</string>
+    <string name="main_menu_bottom_events">События</string>
+    <string name="main_menu_bottom_university">Университет</string>
+    <string name="main_menu_bottom_time_table">Расписание</string>
+    <string name="main_menu_bottom_setting">Настройки</string>
+    <string name="title_university" />
+    <string name="title_timetable" />
+    <string name="title_setting" />
+    <string name="description_profile_photo">Фото</string>
+    <string name="title_profile" />
+    <string name="student">Студент</string>
+    <string name="email">Почта</string>
+    <string name="university">Университет</string>
+    <string name="faculty">Факультет</string>
+    <string name="group">Группа</string>
+    <string name="number_student">Номер студенческого</string>
+</resources>

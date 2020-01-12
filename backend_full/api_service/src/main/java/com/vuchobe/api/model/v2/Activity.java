@@ -1,9 +1,6 @@
 package com.vuchobe.api.model.v2;
 
-import com.fasterxml.jackson.annotation.JsonIdentityInfo;
-import com.fasterxml.jackson.annotation.JsonIdentityReference;
-import com.fasterxml.jackson.annotation.JsonView;
-import com.fasterxml.jackson.annotation.ObjectIdGenerators;
+import com.fasterxml.jackson.annotation.*;
 import com.vuchobe.api.views.Views;
 import lombok.Data;
 import lombok.EqualsAndHashCode;
@@ -31,10 +28,13 @@ public class Activity {
     private Long id;
     
     @Column(name = "date_start")
+    @JsonView({View.Save.class, View.List.class})
+    @JsonFormat(pattern = "yyyy-MM-dd HH:mm:ss")
     private LocalDateTime dateStart;
     
     @ManyToOne()
     @JoinColumn(name = "address_id")
+    @JsonView({View.Save.class, View.List.class})
     private Address address;
 
     @Column
@@ -74,6 +74,11 @@ public class Activity {
     @ManyToMany(mappedBy = "activities")
     @ToString.Exclude
     private Set<Interest> interests;
+    
+    @ManyToMany(mappedBy = "activities")
+    @ToString.Exclude
+    @JsonIgnore
+    private Set<UserAuthEntity> user;
     
     @Transient
     @JsonView({View.Save.class})

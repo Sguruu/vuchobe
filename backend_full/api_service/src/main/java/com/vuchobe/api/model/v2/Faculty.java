@@ -20,15 +20,15 @@ import java.util.Set;
 public class Faculty {
     @Id
     @GeneratedValue(strategy = GenerationType.SEQUENCE)
-    @JsonView({View.Update.class, View.List.class, Institute.View.List.class})
+    @JsonView({View.Update.class, View.List.class, Institute.View.List.class, Timetable.View.List.class})
     private Long id;
 
     @Column
-    @JsonView({View.Save.class, View.List.class})
+    @JsonView({View.Save.class, View.List.class, Timetable.View.List.class})
     private String fullName;
 
     @Column
-    @JsonView({View.Save.class, View.List.class})
+    @JsonView({View.Save.class, View.List.class, Timetable.View.List.class})
     private String shortName;
 
     @ManyToOne
@@ -39,11 +39,12 @@ public class Faculty {
 
     @OneToMany(mappedBy = "faculty")
     @JsonIdentityReference(alwaysAsId = true)
+    @JsonIgnore
     private Set<Timetable> timetables = new HashSet<>();
 
     @OneToOne
     @JoinColumn(name = "address_id")
-    @JsonView({View.Save.class, View.List.class})
+    @JsonView({View.Save.class, View.List.class, Timetable.View.List.class})
     private Address address;
     
     @Transient

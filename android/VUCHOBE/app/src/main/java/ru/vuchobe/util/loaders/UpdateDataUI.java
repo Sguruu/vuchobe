@@ -1,0 +1,1 @@
+package ru.vuchobe.util.loaders;import androidx.annotation.CallSuper;import androidx.annotation.Nullable;import androidx.annotation.UiThread;public interface UpdateDataUI {    void setParent(@Nullable Loader parent);    @UiThread    boolean updateDataUI(@Nullable Loader loader, @Nullable Loader.Params params);}

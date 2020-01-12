@@ -1,5 +1,7 @@
 package com.vuchobe.api.model.v2;
 
+import com.fasterxml.jackson.annotation.JsonIgnore;
+import com.fasterxml.jackson.annotation.JsonView;
 import lombok.Data;
 import lombok.NoArgsConstructor;
 import lombok.Singular;
@@ -17,16 +19,24 @@ public class Lesson {
     private Long id;
 
     @Column(unique = true, nullable = false)
-    private String fullname;
+    @JsonView({Timetable.View.List.class})
+    private String fullName;
 
-    @Column(unique = true, nullable = false)
-    private String shortname;
+    @Column()
+    @JsonView({Timetable.View.List.class})
+    private String shortName;
+    
+    @Column(length = 500)
+    @JsonView({Timetable.View.List.class})
+    private String description;
 
-    @ManyToMany(mappedBy = "lessons")
+    @OneToMany(mappedBy = "lesson")
+    @JsonIgnore
     private Set<Timetable> timetables = new HashSet<>();
 
     @Singular
     @OneToMany(mappedBy = "lesson")
+    @JsonIgnore
     private Set<StudentMark> studentMarks;
 
 }
